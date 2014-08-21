@@ -1,0 +1,8 @@
+allprojects  {
+
+  apply plugin: 'eclipse'
+
+  group = 'hibernate.conventions'
+  version = '0.0.1-SNAPSHOT'
+  
+}
