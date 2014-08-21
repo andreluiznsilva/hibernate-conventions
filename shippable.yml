@@ -6,3 +6,7 @@ notifications:
     recipients: andreluiznsilva@gmail.com
     on_success: change
     on_failure: always
+after_success:
+  - gradle copyTestReports
+after_error:
+  - gradle copyTestReports

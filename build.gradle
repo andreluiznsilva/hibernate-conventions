@@ -26,3 +26,8 @@ dependencies {
     compile 'net.vidageek:mirror:1.6.1'
     
 }
+
+ task copyTestReports(type: Copy) {
+     from 'build/test-results'
+     into 'shippable/testresults'
+ }
