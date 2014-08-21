@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="TableSequenceGeneratorTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2014-08-21T12:45:02" hostname="dls75" time="0.093">
+  <properties/>
+  <testcase name="testConfigureTypePropertiesDialect" classname="TableSequenceGeneratorTest" time="0.089"/>
+  <testcase name="testConfigureNoTableName" classname="TableSequenceGeneratorTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[log4j:WARN No appenders could be found for logger (org.jboss.logging).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+]]></system-err>
+</testsuite>

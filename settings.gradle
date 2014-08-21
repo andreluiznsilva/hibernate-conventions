@@ -1,4 +1,1 @@
-rootProject.name = 'main'
-include ':hibernate-conventions'
-
-project(':hibernate-conventions').projectDir = "$rootDir/impl" as File
+rootProject.name = 'hibernate-conventions'
