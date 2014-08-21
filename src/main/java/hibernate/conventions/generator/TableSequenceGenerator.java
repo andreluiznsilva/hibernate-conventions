@@ -11,11 +11,12 @@ public class TableSequenceGenerator extends SequenceGenerator {
 
 	@Override
 	public void configure(Type type, Properties params, Dialect dialect) throws MappingException {
-		if (params.getProperty(SEQUENCE) == null || params.getProperty(SEQUENCE).length() == 0) {
-			String tableName = params.getProperty(TABLE);
-			if (tableName != null) {
-				String seqName = "seq_" + tableName + "";
-				params.setProperty(SEQUENCE, seqName);
+		String sequence = params.getProperty(SEQUENCE);
+		if (sequence == null || sequence.isEmpty()) {
+			String table = params.getProperty(TABLE);
+			if (table != null && !table.isEmpty()) {
+				sequence = "seq_" + table;
+				params.setProperty(SEQUENCE, sequence);
 			}
 		}
 		super.configure(type, params, dialect);
