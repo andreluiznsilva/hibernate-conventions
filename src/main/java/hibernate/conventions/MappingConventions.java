@@ -19,8 +19,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
-import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.integrator.spi.Integrator;
 import org.hibernate.mapping.Collection;
 import org.hibernate.mapping.Column;
 import org.hibernate.mapping.ForeignKey;
@@ -29,13 +27,11 @@ import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.PrimaryKey;
 import org.hibernate.mapping.Table;
 import org.hibernate.mapping.UniqueKey;
-import org.hibernate.metamodel.source.MetadataImplementor;
 import org.hibernate.service.ServiceRegistry;
-import org.hibernate.service.spi.SessionFactoryServiceRegistry;
 import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
 import org.hibernate.tool.hbm2ddl.SchemaUpdateScript;
 
-public class MappingConventions implements Integrator {
+public class MappingConventions {
 
 	public static List<String> generateCleanScript(EntityManager entityManager) {
 
@@ -81,8 +77,95 @@ public class MappingConventions implements Integrator {
 		return generate(entityManager, 'u');
 	}
 
+	public static InputStream getResourceAsStreamInClasspath(String resource) {
+		return Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
+	}
+
+	public static Properties loadPropertiesInClasspath(String file) {
+		InputStream stream = null;
+		try {
+
+			stream = getResourceAsStreamInClasspath(file);
+
+			if (stream == null) {
+				throw new IOException("File " + file + " not found");
+			}
+
+			Properties config = new Properties();
+			config.load(stream);
+			return config;
+
+		} catch (IOException e) {
+			throw new RuntimeException("Error loading " + file, e);
+		} finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
+
+	}
+
+	public static void normalize(Configuration configuration) {
+
+		Iterator<PersistentClass> iterator1 = configuration.getClassMappings();
+
+		while (iterator1.hasNext()) {
+			PersistentClass clazz = iterator1.next();
+			Table table = clazz.getTable();
+			normalizeClass(clazz);
+			normalizeColumns(table);
+			normalizePrimaryKeys(table);
+			normalizeForeignKeys(table);
+			normalizeUniqueKeys(table);
+			normalizeIndexs(table);
+		}
+
+		Iterator<?> iterator2 = configuration.getCollectionMappings();
+		while (iterator2.hasNext()) {
+			Collection collection = (Collection) iterator2.next();
+			Table table = collection.getCollectionTable();
+			checkSize(table);
+			normalizeColumns(table);
+			normalizePrimaryKeys(table);
+			normalizeForeignKeys(table);
+			normalizeIndexs(table);
+		}
+
+	}
+
 	public static void normalize(EntityManager entityManager) {
 		normalize(getConfiguration(entityManager));
+	}
+
+	public static void validate(Configuration configuration) {
+
+		Iterator<PersistentClass> iterator = configuration.getClassMappings();
+		while (iterator.hasNext()) {
+			PersistentClass clazz = iterator.next();
+			Table table = clazz.getTable();
+			checkSize(table);
+			validateColumns(table);
+			validatePrimaryKeys(table);
+			validateForeignKeys(table);
+			validateUniqueKeys(table);
+			validateIndexs(table);
+		}
+
+		Iterator<?> iterator2 = configuration.getCollectionMappings();
+		while (iterator2.hasNext()) {
+			Collection collection = (Collection) iterator2.next();
+			Table table = collection.getCollectionTable();
+			checkSize(table);
+			validateColumns(table);
+			validatePrimaryKeys(table);
+			validateForeignKeys(table);
+			validateIndexs(table);
+		}
+
 	}
 
 	public static void validate(EntityManager entityManager) {
@@ -138,38 +221,6 @@ public class MappingConventions implements Integrator {
 		return loadPropertiesInClasspath("mappingConventions.properties");
 	}
 
-	public static InputStream getResourceAsStreamInClasspath(String resource) {
-		return Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
-	}
-
-	public static Properties loadPropertiesInClasspath(String file) {
-		InputStream stream = null;
-		try {
-
-			stream = getResourceAsStreamInClasspath(file);
-
-			if (stream == null) {
-				throw new IOException("File " + file + " not found");
-			}
-
-			Properties config = new Properties();
-			config.load(stream);
-			return config;
-
-		} catch (IOException e) {
-			throw new RuntimeException("Error loading " + file, e);
-		} finally {
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		}
-
-	}
-
 	private static Configuration getConfiguration(EntityManager entityManager) {
 		return (Configuration) ReflectionUtils.getFieldValue("configuration", getServiceRegistry(entityManager));
 	}
@@ -196,34 +247,6 @@ public class MappingConventions implements Integrator {
 
 	private static SessionFactory getSessionFactory(EntityManager entityManager) {
 		return entityManager.unwrap(Session.class).getSessionFactory();
-	}
-
-	private static void normalize(Configuration configuration) {
-
-		Iterator<PersistentClass> iterator1 = configuration.getClassMappings();
-
-		while (iterator1.hasNext()) {
-			PersistentClass clazz = iterator1.next();
-			Table table = clazz.getTable();
-			normalizeClass(clazz);
-			normalizeColumns(table);
-			normalizePrimaryKeys(table);
-			normalizeForeignKeys(table);
-			normalizeUniqueKeys(table);
-			normalizeIndexs(table);
-		}
-
-		Iterator<?> iterator2 = configuration.getCollectionMappings();
-		while (iterator2.hasNext()) {
-			Collection collection = (Collection) iterator2.next();
-			Table table = collection.getCollectionTable();
-			checkSize(table);
-			normalizeColumns(table);
-			normalizePrimaryKeys(table);
-			normalizeForeignKeys(table);
-			normalizeIndexs(table);
-		}
-
 	}
 
 	private static void normalizeClass(PersistentClass persistentClass) {
@@ -302,33 +325,6 @@ public class MappingConventions implements Integrator {
 		}
 	}
 
-	private static void validate(Configuration configuration) {
-
-		Iterator<PersistentClass> iterator = configuration.getClassMappings();
-		while (iterator.hasNext()) {
-			PersistentClass clazz = iterator.next();
-			Table table = clazz.getTable();
-			checkSize(table);
-			validateColumns(table);
-			validatePrimaryKeys(table);
-			validateForeignKeys(table);
-			validateUniqueKeys(table);
-			validateIndexs(table);
-		}
-
-		Iterator<?> iterator2 = configuration.getCollectionMappings();
-		while (iterator2.hasNext()) {
-			Collection collection = (Collection) iterator2.next();
-			Table table = collection.getCollectionTable();
-			checkSize(table);
-			validateColumns(table);
-			validatePrimaryKeys(table);
-			validateForeignKeys(table);
-			validateIndexs(table);
-		}
-
-	}
-
 	@SuppressWarnings("rawtypes")
 	private static void validateColumns(Table table) {
 		Iterator iterator = table.getColumnIterator();
@@ -371,29 +367,6 @@ public class MappingConventions implements Integrator {
 			checkSize(uk.getName().toLowerCase());
 		}
 
-	}
-
-	@Override
-	public void disintegrate(
-			SessionFactoryImplementor sessionFactory,
-			SessionFactoryServiceRegistry serviceRegistry) {
-
-	}
-
-	@Override
-	public void integrate(
-			Configuration configuration,
-			SessionFactoryImplementor sessionFactory,
-			SessionFactoryServiceRegistry serviceRegistry) {
-		normalize(configuration);
-		validate(configuration);
-	}
-
-	@Override
-	public void integrate(
-			MetadataImplementor metadata,
-			SessionFactoryImplementor sessionFactory,
-			SessionFactoryServiceRegistry serviceRegistry) {
 	}
 
 }

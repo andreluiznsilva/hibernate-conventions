@@ -1,3 +1,6 @@
+package hibernate.conventions.generator;
+
+
 import static org.hibernate.id.PersistentIdentifierGenerator.IDENTIFIER_NORMALIZER;
 import static org.hibernate.id.PersistentIdentifierGenerator.TABLE;
 import static org.hibernate.id.SequenceGenerator.SEQUENCE;
