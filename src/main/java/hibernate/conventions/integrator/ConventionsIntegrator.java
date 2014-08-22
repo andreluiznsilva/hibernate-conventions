@@ -1,6 +1,6 @@
 package hibernate.conventions.integrator;
 
-import hibernate.conventions.MappingConventions;
+import hibernate.conventions.HibernateConventions;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
@@ -22,8 +22,11 @@ public class ConventionsIntegrator implements Integrator {
 			Configuration configuration,
 			SessionFactoryImplementor sessionFactory,
 			SessionFactoryServiceRegistry serviceRegistry) {
-		MappingConventions.normalize(configuration);
-		MappingConventions.validate(configuration);
+
+		HibernateConventions conventions = new HibernateConventions(configuration);
+		conventions.normalize();
+		conventions.validate();
+
 	}
 
 	@Override
