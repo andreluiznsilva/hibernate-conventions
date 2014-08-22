@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
+	version="2.0">
+
+	<entity class="br.com.pst.sso.api.domain.gis.entity.CoverageMap" />
+	<entity class="br.com.pst.sso.api.domain.security.entity.AuditLog" />
+	<entity class="br.com.pst.sso.api.domain.security.entity.Role" />
+	<entity class="br.com.pst.sso.api.domain.security.entity.Permission" />
+	<entity class="br.com.pst.sso.api.domain.security.entity.SsoUser" />
+	<entity class="br.com.pst.sso.api.domain.security.entity.OAuthToken" />
+	<entity class="br.com.pst.sso.api.domain.event.entity.Event" />
+	<entity class="br.com.pst.sso.api.domain.event.entity.EventPane" />
+	<entity class="br.com.pst.sso.api.domain.call.entity.CallCloseType" />
+	<entity class="br.com.pst.sso.api.domain.call.entity.Call" />
+	<entity class="br.com.pst.sso.api.domain.call.entity.CallActivityLog" />
+	<entity class="br.com.pst.sso.api.domain.call.entity.CallStolenRegistry" />
+	<entity class="br.com.pst.sso.api.domain.call.entity.CallStolenInfo" />
+	<entity class="br.com.pst.sso.api.domain.call.entity.CallStolenImage" />
+	<entity class="br.com.pst.sso.api.domain.call.entity.PlaceInformation" />
+
+</entity-mappings>
