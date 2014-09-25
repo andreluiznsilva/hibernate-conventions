@@ -10,7 +10,7 @@ import org.hibernate.dialect.Dialect;
 import org.hibernate.id.SequenceGenerator;
 import org.hibernate.type.Type;
 
-public class TableSequenceGenerator extends SequenceGenerator {
+public class ConventionSequenceGenerator extends SequenceGenerator {
 
 	@Override
 	public void configure(Type type, Properties params, Dialect dialect) {

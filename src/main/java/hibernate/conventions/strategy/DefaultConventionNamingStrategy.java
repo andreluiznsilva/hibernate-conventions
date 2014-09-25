@@ -28,17 +28,7 @@ public class DefaultConventionNamingStrategy extends DefaultNamingStrategy imple
 
 	@Override
 	public String sequenceName(String entity, String tableName) {
-		return "seq_" + tableName;
-	}
-
-	@Override
-	public String uniqueKeyName(String entity, String tableName) {
-		return "uk_" + tableName;
-	}
-
-	@Override
-	public String sqlType(String name, String sqlType) {
-		return sqlType;
+		return "seq_" + (isEmpty(tableName) ? entity : tableName);
 	}
 
 	@Override
@@ -49,6 +39,20 @@ public class DefaultConventionNamingStrategy extends DefaultNamingStrategy imple
 	@Override
 	public int sqlScale(String name, String sqlType, int scale) {
 		return scale;
+	}
+
+	@Override
+	public String sqlType(String name, String sqlType) {
+		return sqlType;
+	}
+
+	@Override
+	public String uniqueKeyName(String entity, String tableName) {
+		return "uk_" + tableName;
+	}
+
+	private boolean isEmpty(String value) {
+		return value == null || value.isEmpty();
 	}
 
 }

@@ -6,7 +6,8 @@
 	<persistence-unit name="test" transaction-type="RESOURCE_LOCAL">
 
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+
+		<class>hibernate.conventions.dummy.DummyEntity</class>
 
 		<properties>
 

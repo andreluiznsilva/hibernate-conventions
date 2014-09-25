@@ -14,7 +14,7 @@ public class DummyEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
-	@GenericGenerator(name = "generator", strategy = "hibernate.conventions.generator.TableSequenceGenerator")
+	@GenericGenerator(name = "generator", strategy = "hibernate.conventions.generator.ConventionSequenceGenerator")
 	private Long id;
 	private String name;
 

@@ -30,5 +30,5 @@ dependencies {
 
  task copyTestReports(type: Copy) {
      from 'build/test-results'
-     into 'shippable/test-results'
+     into 'shippable/testresults'
  }

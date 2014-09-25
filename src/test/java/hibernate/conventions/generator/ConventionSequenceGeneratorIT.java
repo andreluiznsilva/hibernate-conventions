@@ -1,6 +1,6 @@
 package hibernate.conventions.generator;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import hibernate.conventions.dummy.DummyEntity;
 
 import javax.persistence.EntityManager;
@@ -11,35 +11,34 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TableSequenceGeneratorIT {
+public class ConventionSequenceGeneratorIT {
 
 	private EntityManagerFactory entityManagerFactory;
+	private EntityManager entityManager;
 
 	@Before
 	public void setUp() throws Exception {
 		entityManagerFactory = Persistence.createEntityManagerFactory("test");
+		entityManager = entityManagerFactory.createEntityManager();
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		entityManager.close();
 		entityManagerFactory.close();
 	}
 
 	@Test
-	public void testConfigureNoTableName() {
+	public void testSequenceGenerator() {
 
-		EntityManager em = entityManagerFactory.createEntityManager();
-
-		enableOracleSyntax(em);
-
-		Number before = sequenceNextVal(em);
+		Number before = sequenceNextVal();
 		DummyEntity dummy = new DummyEntity("test");
 
-		em.getTransaction().begin();
-		em.persist(dummy);
-		em.getTransaction().commit();
+		entityManager.getTransaction().begin();
+		entityManager.persist(dummy);
+		entityManager.getTransaction().commit();
 
-		Number after = sequenceNextVal(em);
+		Number after = sequenceNextVal();
 
 		assertEquals(1, before);
 		assertEquals(2, dummy.getId().longValue());
@@ -47,14 +46,8 @@ public class TableSequenceGeneratorIT {
 
 	}
 
-	private void enableOracleSyntax(EntityManager em) {
-		em.getTransaction().begin();
-		em.createNativeQuery("SET DATABASE SQL SYNTAX ORA TRUE").executeUpdate();
-		em.getTransaction().commit();
-	}
-
-	private Number sequenceNextVal(EntityManager em) {
-		return (Number) em.createNativeQuery("SELECT seq_DummyEntity.NEXTVAL FROM DUAL").getSingleResult();
+	private Number sequenceNextVal() {
+		return (Number) entityManager.createNativeQuery("call NEXT VALUE FOR seq_DummyEntity").getSingleResult();
 	}
 
 }
