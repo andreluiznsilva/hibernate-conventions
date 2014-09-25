@@ -6,19 +6,24 @@
 	<persistence-unit name="test" transaction-type="RESOURCE_LOCAL">
 
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<jta-data-source>java:/sso/datasource/SSODataSource</jta-data-source>
-		<mapping-file>META-INF/mapping.xml</mapping-file>
 		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
 
 		<properties>
 
-			<property name="hibernate.ejb.naming_strategy" value="br.com.pst.sso.common.persistence.hibernate.CustomNamingStrategy" />
+			<property name="hibernate.ejb.naming_strategy" value="hibernate.conventions.strategy.DefaultConventionNamingStrategy" />
+
+			<!-- Database -->
+			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
 
 			<!-- Log -->
 			<property name="hibernate.show_sql" value="false" />
 			<property name="hibernate.format_sql" value="true" />
 			<property name="hibernate.generate_statistics" value="true" />
 			<property name="hibernate.cache.infinispan.statistics" value="true" />
+
+			<!-- Test Database -->
+			<property name="hibernate.connection.url" value="jdbc:hsqldb:mem:test;shutdown=true;close_result=true" />
+			<property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver" />
 
 		</properties>
 

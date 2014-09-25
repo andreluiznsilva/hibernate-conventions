@@ -18,7 +18,7 @@ import org.hibernate.id.SequenceGenerator;
 import org.hibernate.type.Type;
 import org.junit.Test;
 
-public class TableSequenceGeneratorTest {
+public class TableSequenceGeneratorUT {
 
 	private SequenceGenerator generator = new TableSequenceGenerator();
 
@@ -47,7 +47,7 @@ public class TableSequenceGeneratorTest {
 
 		generator.configure(type, params, dialect);
 
-		assertNull(params.get(TABLE));
+		assertNull(params.get(SEQUENCE));
 
 	}
 

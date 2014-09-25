@@ -7,7 +7,7 @@ import hibernate.conventions.strategy.DefaultConventionNamingStrategy;
 
 import org.junit.Test;
 
-public class DefaultConventionNamingStrategyTest {
+public class DefaultConventionNamingStrategyUT {
 
 	private ConventionNamingStrategy strategy = new DefaultConventionNamingStrategy();
 
