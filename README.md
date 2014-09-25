@@ -1,6 +1,6 @@
 # Hibernate Conventions
 
-[![Build Status](https://api.shippable.com/projects/53f5df9099773f36023f9a12/badge/master)](https://www.shippable.com/projects/53f5df9099773f36023f9a12)
+[![Build Status](https://api.shippable.com/projects/540e74613479c5ea8f9e6238/badge?branchName=master)](https://app.shippable.com/projects/540e74613479c5ea8f9e6238/builds/latest)
 
 Tecnologies       | Version
 ------------------|--------------------
