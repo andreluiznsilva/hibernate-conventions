@@ -15,6 +15,7 @@
 
 			<!-- Database -->
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
+			<property name="hibernate.conventions.maxLength" value="30" />
 
 			<!-- Log -->
 			<property name="hibernate.show_sql" value="false" />

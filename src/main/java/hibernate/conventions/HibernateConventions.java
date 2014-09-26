@@ -17,7 +17,6 @@ import org.hibernate.mapping.UniqueKey;
 
 public class HibernateConventions {
 
-	private final int maxLength = 30;
 	private final Configuration configuration;
 	private final ConventionNamingStrategy strategy;
 
@@ -60,6 +59,11 @@ public class HibernateConventions {
 			validate(table);
 		}
 
+	}
+
+	private int getProperty(String name, int defaultValue) {
+		String value = (String) configuration.getProperties().get(name);
+		return value == null ? defaultValue : Integer.valueOf(value);
 	}
 
 	private void normalize(Table table, String entityName) {
@@ -143,7 +147,7 @@ public class HibernateConventions {
 		Iterator iterator = table.getColumnIterator();
 		while (iterator.hasNext()) {
 			Column column = (Column) iterator.next();
-			validateMaxLength(column.getName().toLowerCase());
+			validateMaxLength(column.getName());
 		}
 	}
 
@@ -152,7 +156,7 @@ public class HibernateConventions {
 		Iterator iterator = table.getForeignKeyIterator();
 		while (iterator.hasNext()) {
 			ForeignKey fk = (ForeignKey) iterator.next();
-			validateMaxLength(fk.getName().toLowerCase());
+			validateMaxLength(fk.getName());
 		}
 	}
 
@@ -161,11 +165,12 @@ public class HibernateConventions {
 		Iterator iterator = table.getIndexIterator();
 		while (iterator.hasNext()) {
 			Index index = (Index) iterator.next();
-			validateMaxLength(index.getName().toLowerCase());
+			validateMaxLength(index.getName());
 		}
 	}
 
 	private void validateMaxLength(String name) {
+		int maxLength = getProperty("hibernate.conventions.maxLength", 255);
 		if (name.length() > maxLength) {
 			throw new RuntimeException("Name '" + name + "' has more than " + maxLength + " caracteres");
 		}
@@ -174,7 +179,7 @@ public class HibernateConventions {
 	private void validatePrimaryKeys(Table table) {
 		PrimaryKey primaryKey = table.getPrimaryKey();
 		if (primaryKey != null) {
-			validateMaxLength(primaryKey.getName().toLowerCase());
+			validateMaxLength(primaryKey.getName());
 		}
 	}
 
@@ -187,9 +192,8 @@ public class HibernateConventions {
 		Iterator iterator = table.getUniqueKeyIterator();
 		while (iterator.hasNext()) {
 			UniqueKey uk = (UniqueKey) iterator.next();
-			validateMaxLength(uk.getName().toLowerCase());
+			validateMaxLength(uk.getName());
 		}
-
 	}
 
 }
