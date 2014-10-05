@@ -4,12 +4,16 @@ import hibernate.conventions.DDLConventions;
 import hibernate.conventions.MappingConventions;
 import hibernate.conventions.strategy.ConventionNamingStrategy;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import javax.persistence.EntityManagerFactory;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.ObjectNameNormalizer;
 import org.hibernate.dialect.Dialect;
+import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.hibernate.service.ServiceRegistry;
 
 public class ConventionUtils {
@@ -44,12 +48,31 @@ public class ConventionUtils {
 		return extractServiceRegistry(extractSessionFactory(entityManagerFactory));
 	}
 
+	public static Connection getConnection(EntityManagerFactory entityManagerFactory) {
+		try {
+			return extractServiceRegistry(entityManagerFactory).getService(ConnectionProvider.class).getConnection();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public static boolean isEmpty(String value) {
 		return value == null || value.isEmpty();
 	}
 
 	public static boolean isNotEmpty(String value) {
 		return !isEmpty(value);
+	}
+
+	public static void opendHSQLDBManager(EntityManagerFactory entityManagerFactory) {
+
+		Connection connection = getConnection(entityManagerFactory);
+
+		org.hsqldb.util.DatabaseManagerSwing manager = new org.hsqldb.util.DatabaseManagerSwing();
+		manager.main();
+		manager.connect(connection);
+		manager.start();
+
 	}
 
 	private static ServiceRegistry extractServiceRegistry(SessionFactory sessionFactory) {
