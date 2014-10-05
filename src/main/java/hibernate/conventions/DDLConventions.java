@@ -1,5 +1,7 @@
 package hibernate.conventions;
 
+import hibernate.conventions.util.ConventionUtils;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,7 +11,6 @@ import java.util.List;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.Dialect;
-import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.hibernate.mapping.Collection;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Table;
@@ -78,7 +79,7 @@ public class DDLConventions {
 
 	private DatabaseMetadata getData() {
 		try {
-			Connection connection = serviceRegistry.getService(ConnectionProvider.class).getConnection();
+			Connection connection = ConventionUtils.getConnection(serviceRegistry);
 			return new DatabaseMetadata(connection, dialect, configuration);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);

@@ -49,8 +49,12 @@ public class ConventionUtils {
 	}
 
 	public static Connection getConnection(EntityManagerFactory entityManagerFactory) {
+		return getConnection(extractServiceRegistry(entityManagerFactory));
+	}
+
+	public static Connection getConnection(ServiceRegistry serviceRegistry) {
 		try {
-			return extractServiceRegistry(entityManagerFactory).getService(ConnectionProvider.class).getConnection();
+			return serviceRegistry.getService(ConnectionProvider.class).getConnection();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -62,17 +66,6 @@ public class ConventionUtils {
 
 	public static boolean isNotEmpty(String value) {
 		return !isEmpty(value);
-	}
-
-	public static void opendHSQLDBManager(EntityManagerFactory entityManagerFactory) {
-
-		Connection connection = getConnection(entityManagerFactory);
-
-		org.hsqldb.util.DatabaseManagerSwing manager = new org.hsqldb.util.DatabaseManagerSwing();
-		manager.main();
-		manager.connect(connection);
-		manager.start();
-
 	}
 
 	private static ServiceRegistry extractServiceRegistry(SessionFactory sessionFactory) {
