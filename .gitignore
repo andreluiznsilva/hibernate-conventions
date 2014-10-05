@@ -12,7 +12,6 @@ opt/
 *.project
 *.log
 *.lck
-*.epoch
 *.iml
 *.ipr
 *.iws
