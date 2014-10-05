@@ -24,7 +24,7 @@
 			<property name="hibernate.cache.infinispan.statistics" value="true" />
 
 			<!-- Test Database -->
-			<property name="hibernate.connection.url" value="jdbc:hsqldb:mem:test;shutdown=true;close_result=true" />
+			<property name="hibernate.connection.url" value="jdbc:hsqldb:mem:test;syntax.postgre=true;shutdown=true;close_result=true" />
 			<property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver" />
 
 		</properties>
