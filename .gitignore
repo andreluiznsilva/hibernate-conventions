@@ -6,6 +6,8 @@ build/
 bin/
 tmp/
 opt/
+.classpath
+.project
 *.classpath
 *.project
 *.log

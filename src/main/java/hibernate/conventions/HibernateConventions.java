@@ -6,6 +6,7 @@ import hibernate.conventions.strategy.DefaultConventionNamingStrategy;
 import java.util.Iterator;
 
 import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.NamingStrategy;
 import org.hibernate.mapping.Collection;
 import org.hibernate.mapping.Column;
 import org.hibernate.mapping.ForeignKey;
@@ -21,8 +22,20 @@ public class HibernateConventions {
 	private final ConventionNamingStrategy strategy;
 
 	public HibernateConventions(Configuration configuration) {
+
 		this.configuration = configuration;
-		strategy = new DefaultConventionNamingStrategy();
+
+		NamingStrategy namingStrategy = configuration.getNamingStrategy();
+
+		if (namingStrategy == null) {
+			strategy = new DefaultConventionNamingStrategy();
+		} else if (namingStrategy instanceof ConventionNamingStrategy) {
+			strategy = (ConventionNamingStrategy) namingStrategy;
+		} else {
+			throw new IllegalArgumentException(
+					"Configured namingStrategy is not a instance of ConventionNamingStrategy");
+		}
+
 	}
 
 	public void normalize() {
@@ -59,6 +72,14 @@ public class HibernateConventions {
 			validate(table);
 		}
 
+	}
+
+	protected Configuration getConfiguration() {
+		return configuration;
+	}
+
+	protected ConventionNamingStrategy getStrategy() {
+		return strategy;
 	}
 
 	private int getProperty(String name, int defaultValue) {

@@ -1,9 +1,11 @@
 package hibernate.conventions;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import hibernate.conventions.dummy.TestConventionNamingStrategy;
+import hibernate.conventions.strategy.ConventionNamingStrategy;
+import hibernate.conventions.strategy.DefaultConventionNamingStrategy;
 import hibernate.conventions.util.ReflectionUtils;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
@@ -27,7 +29,6 @@ public class HibernateConventionsIT {
 		ServiceRegistry serviceRegistry = (ServiceRegistry) ReflectionUtils.getFieldValue("serviceRegistry",
 				sessionFactory);
 		configuration = (Configuration) ReflectionUtils.getFieldValue("configuration", serviceRegistry);
-		conventions = new HibernateConventions(configuration);
 	}
 
 	@After
@@ -37,18 +38,56 @@ public class HibernateConventionsIT {
 
 	@Test
 	public void testNormalize() {
+		conventions = new HibernateConventions(configuration);
 		conventions.normalize();
 	}
 
 	@Test
 	public void testValidate() {
+		conventions = new HibernateConventions(configuration);
 		conventions.validate();
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void testValidateMaxLength() {
+
 		configuration.setProperty("hibernate.conventions.maxLength", "5");
+
+		conventions = new HibernateConventions(configuration);
 		conventions.validate();
+
+	}
+
+	@Test
+	public void testEmptyNamingStrategy() {
+
+		configuration.setNamingStrategy(null);
+
+		conventions = new HibernateConventions(configuration);
+		ConventionNamingStrategy strategy = conventions.getStrategy();
+
+		assertTrue(strategy instanceof DefaultConventionNamingStrategy);
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidConventionNamingStrategy() {
+
+		configuration.setNamingStrategy(new org.hibernate.cfg.DefaultNamingStrategy());
+
+		conventions = new HibernateConventions(configuration);
+
+	}
+
+	@Test
+	public void testConfiguredConventionNamingStrategy() {
+
+		conventions = new HibernateConventions(configuration);
+
+		ConventionNamingStrategy strategy = conventions.getStrategy();
+
+		assertTrue(strategy instanceof TestConventionNamingStrategy);
+
 	}
 
 }

@@ -11,7 +11,7 @@
 
 		<properties>
 
-			<property name="hibernate.ejb.naming_strategy" value="hibernate.conventions.strategy.DefaultConventionNamingStrategy" />
+			<property name="hibernate.ejb.naming_strategy" value="hibernate.conventions.dummy.TestConventionNamingStrategy" />
 
 			<!-- Database -->
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
