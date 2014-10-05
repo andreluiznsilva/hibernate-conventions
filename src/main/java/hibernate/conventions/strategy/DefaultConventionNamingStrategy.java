@@ -1,5 +1,7 @@
 package hibernate.conventions.strategy;
 
+import hibernate.conventions.util.ConventionUtils;
+
 import org.hibernate.cfg.DefaultNamingStrategy;
 
 public class DefaultConventionNamingStrategy extends DefaultNamingStrategy implements ConventionNamingStrategy {
@@ -28,7 +30,7 @@ public class DefaultConventionNamingStrategy extends DefaultNamingStrategy imple
 
 	@Override
 	public String sequenceName(String entity, String tableName) {
-		return "seq_" + (isEmpty(tableName) ? entity : tableName);
+		return "seq_" + (ConventionUtils.isEmpty(tableName) ? entity : tableName);
 	}
 
 	@Override
@@ -49,10 +51,6 @@ public class DefaultConventionNamingStrategy extends DefaultNamingStrategy imple
 	@Override
 	public String uniqueKeyName(String entity, String tableName) {
 		return "uk_" + tableName;
-	}
-
-	private boolean isEmpty(String value) {
-		return value == null || value.isEmpty();
 	}
 
 }

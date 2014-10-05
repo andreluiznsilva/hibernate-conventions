@@ -69,8 +69,7 @@ public class DDLConventions {
 
 	public List<String> generateUpdateScript() {
 		List<String> sqls = new ArrayList<String>();
-		DatabaseMetadata meta = getData();
-		List<SchemaUpdateScript> scripts = configuration.generateSchemaUpdateScriptList(dialect, meta);
+		List<SchemaUpdateScript> scripts = configuration.generateSchemaUpdateScriptList(dialect, getData());
 		for (SchemaUpdateScript schemaUpdateScript : scripts) {
 			sqls.add(schemaUpdateScript.getScript());
 		}

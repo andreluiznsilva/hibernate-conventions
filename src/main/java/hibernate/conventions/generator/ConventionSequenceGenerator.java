@@ -1,7 +1,7 @@
 package hibernate.conventions.generator;
 
 import hibernate.conventions.strategy.ConventionNamingStrategy;
-import hibernate.conventions.util.ReflectionUtils;
+import hibernate.conventions.util.ConventionUtils;
 
 import java.util.Properties;
 
@@ -19,20 +19,16 @@ public class ConventionSequenceGenerator extends SequenceGenerator {
 		String table = params.getProperty(TABLE);
 		ObjectNameNormalizer normalizer = (ObjectNameNormalizer) params.get(IDENTIFIER_NORMALIZER);
 
-		ConventionNamingStrategy strategy = extractNameStrategy(normalizer);
+		ConventionNamingStrategy strategy = ConventionUtils.extractNameStrategy(normalizer);
 
 		String sequence = params.getProperty(SEQUENCE);
-		if (sequence == null || sequence.isEmpty()) {
+		if (ConventionUtils.isEmpty(sequence)) {
 			sequence = strategy.sequenceName(entityName, table);
 			params.setProperty(SEQUENCE, sequence);
 		}
 
 		super.configure(type, params, dialect);
 
-	}
-
-	private ConventionNamingStrategy extractNameStrategy(ObjectNameNormalizer normalizer) {
-		return (ConventionNamingStrategy) ReflectionUtils.getPropertyValue("namingStrategy", normalizer);
 	}
 
 }
