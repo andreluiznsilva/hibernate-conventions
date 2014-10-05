@@ -16,12 +16,12 @@ import org.hibernate.mapping.PrimaryKey;
 import org.hibernate.mapping.Table;
 import org.hibernate.mapping.UniqueKey;
 
-public class HibernateConventions {
+public class MappingConventions {
 
 	private final Configuration configuration;
 	private final ConventionNamingStrategy strategy;
 
-	public HibernateConventions(Configuration configuration) {
+	public MappingConventions(Configuration configuration) {
 
 		this.configuration = configuration;
 
@@ -36,6 +36,10 @@ public class HibernateConventions {
 					"Configured namingStrategy is not a instance of ConventionNamingStrategy");
 		}
 
+	}
+
+	public ConventionNamingStrategy getStrategy() {
+		return strategy;
 	}
 
 	public void normalize() {
@@ -72,14 +76,6 @@ public class HibernateConventions {
 			validate(table);
 		}
 
-	}
-
-	protected Configuration getConfiguration() {
-		return configuration;
-	}
-
-	protected ConventionNamingStrategy getStrategy() {
-		return strategy;
 	}
 
 	private int getProperty(String name, int defaultValue) {

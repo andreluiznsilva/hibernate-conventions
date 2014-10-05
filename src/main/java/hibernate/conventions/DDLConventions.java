@@ -1,7 +1,5 @@
 package hibernate.conventions;
 
-import hibernate.conventions.util.ReflectionUtils;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,7 +7,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
@@ -26,10 +23,10 @@ public class DDLConventions {
 	private final ServiceRegistry serviceRegistry;
 	private final Dialect dialect;
 
-	public DDLConventions(Configuration configuration, ServiceRegistry serviceRegistry, SessionFactory sessionFactory) {
+	public DDLConventions(Configuration configuration, ServiceRegistry serviceRegistry, Dialect dialect) {
 		this.configuration = configuration;
 		this.serviceRegistry = serviceRegistry;
-		dialect = (Dialect) ReflectionUtils.getFieldValue("dialect", sessionFactory);
+		this.dialect = dialect;
 	}
 
 	public List<String> generateCleanScript() {
@@ -63,43 +60,21 @@ public class DDLConventions {
 	}
 
 	public List<String> generateCreateScript() {
-		return generate('c');
+		return Arrays.asList(configuration.generateSchemaCreationScript(dialect));
 	}
 
 	public List<String> generateDropScript() {
-		return generate('d');
+		return Arrays.asList(configuration.generateDropSchemaScript(dialect));
 	}
 
 	public List<String> generateUpdateScript() {
-		return generate('u');
-	}
-
-	private void addAll(String[] origin, List<String> target) {
-		target.addAll(Arrays.asList(origin));
-	}
-
-	private List<String> generate(char type) {
-
 		List<String> sqls = new ArrayList<String>();
-
-		switch (type) {
-			case 'c':
-				addAll(configuration.generateSchemaCreationScript(dialect), sqls);
-				break;
-			case 'd':
-				addAll(configuration.generateDropSchemaScript(dialect), sqls);
-				break;
-			case 'u':
-				DatabaseMetadata meta = getData();
-				List<SchemaUpdateScript> scripts = configuration.generateSchemaUpdateScriptList(dialect, meta);
-				for (SchemaUpdateScript schemaUpdateScript : scripts) {
-					sqls.add(schemaUpdateScript.getScript());
-				}
-				break;
+		DatabaseMetadata meta = getData();
+		List<SchemaUpdateScript> scripts = configuration.generateSchemaUpdateScriptList(dialect, meta);
+		for (SchemaUpdateScript schemaUpdateScript : scripts) {
+			sqls.add(schemaUpdateScript.getScript());
 		}
-
 		return sqls;
-
 	}
 
 	private DatabaseMetadata getData() {
