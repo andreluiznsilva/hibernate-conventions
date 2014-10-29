@@ -12,6 +12,6 @@ cp -vr ~/.m2/repository/hibernate-conventions/. ./hibernate-conventions/
 
 git commit -am "release"
 
-#git push
+git push
 
 git checkout master
