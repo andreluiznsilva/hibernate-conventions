@@ -10,6 +10,8 @@ git pull
 
 cp -vr ~/.m2/repository/hibernate-conventions/. ./hibernate-conventions/
 
+git add *
+
 git commit -am "release"
 
 git push
