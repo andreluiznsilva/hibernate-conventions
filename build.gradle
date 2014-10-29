@@ -4,7 +4,6 @@ apply plugin: 'maven'
 apply from: 'http://tellurianring.com/projects/gradle-plugins/gradle-release/apply.groovy'
 
 group = 'hibernate-conventions'
-version = '0.0.1-SNAPSHOT'
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6

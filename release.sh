@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gradle build install
+gradle build release build install
 
 git checkout mvn-repo
 
