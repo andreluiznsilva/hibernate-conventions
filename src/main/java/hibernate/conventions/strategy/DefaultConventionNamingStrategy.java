@@ -1,6 +1,6 @@
 package hibernate.conventions.strategy;
 
-import hibernate.conventions.util.ConventionUtils;
+import hibernate.conventions.utils.ConventionUtils;
 
 import org.hibernate.cfg.DefaultNamingStrategy;
 

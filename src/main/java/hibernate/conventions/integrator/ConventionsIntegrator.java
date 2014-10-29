@@ -23,7 +23,7 @@ public class ConventionsIntegrator implements Integrator {
 			SessionFactoryImplementor sessionFactory,
 			SessionFactoryServiceRegistry serviceRegistry) {
 
-		MappingConventions mappingConventions = new MappingConventions(configuration);
+		MappingConventions mappingConventions = MappingConventions.create(configuration);
 		mappingConventions.normalize();
 		mappingConventions.validate();
 

@@ -1,6 +1,9 @@
 package hibernate.conventions;
 
-import hibernate.conventions.util.ConventionUtils;
+import static hibernate.conventions.utils.ConventionUtils.extractConfiguration;
+import static hibernate.conventions.utils.ConventionUtils.extractDialect;
+import static hibernate.conventions.utils.ConventionUtils.extractServiceRegistry;
+import hibernate.conventions.utils.ConventionUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -8,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.persistence.EntityManagerFactory;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.Dialect;
@@ -20,11 +25,20 @@ import org.hibernate.tool.hbm2ddl.SchemaUpdateScript;
 
 public class DDLConventions {
 
+	public static DDLConventions create(EntityManagerFactory entityManagerFactory) {
+		return create(entityManagerFactory, extractDialect(entityManagerFactory));
+	}
+
+	public static DDLConventions create(EntityManagerFactory entityManagerFactory, Dialect dialect) {
+		return new DDLConventions(
+				extractConfiguration(entityManagerFactory), extractServiceRegistry(entityManagerFactory), dialect);
+	}
+
 	private final Configuration configuration;
 	private final ServiceRegistry serviceRegistry;
 	private final Dialect dialect;
 
-	public DDLConventions(Configuration configuration, ServiceRegistry serviceRegistry, Dialect dialect) {
+	private DDLConventions(Configuration configuration, ServiceRegistry serviceRegistry, Dialect dialect) {
 		this.configuration = configuration;
 		this.serviceRegistry = serviceRegistry;
 		this.dialect = dialect;
@@ -36,8 +50,7 @@ public class DDLConventions {
 
 		String name = dialect.getClass().getSimpleName().toUpperCase();
 
-
-        if (name.startsWith("HSQL")) {
+		if (name.startsWith("HSQL")) {
 			results.add("TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK");
 		} else if (name.startsWith("POSTGRESQL")) {
 

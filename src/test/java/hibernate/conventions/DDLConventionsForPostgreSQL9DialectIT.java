@@ -2,16 +2,13 @@ package hibernate.conventions;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import hibernate.conventions.util.ConventionUtils;
 
 import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.PostgreSQL9Dialect;
-import org.hibernate.service.ServiceRegistry;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -20,16 +17,12 @@ import org.junit.Test;
 public class DDLConventionsForPostgreSQL9DialectIT {
 
 	private EntityManagerFactory entityManagerFactory;
-	private Configuration configuration;
-	private ServiceRegistry serviceRegistry;
 	private DDLConventions conventions;
 
 	@Before
 	public void setUp() throws Exception {
 		entityManagerFactory = Persistence.createEntityManagerFactory("test");
-		serviceRegistry = ConventionUtils.extractServiceRegistry(entityManagerFactory);
-		configuration = ConventionUtils.extractConfiguration(entityManagerFactory);
-		conventions = new DDLConventions(configuration, serviceRegistry, new PostgreSQL9Dialect());
+		conventions = DDLConventions.create(entityManagerFactory, new PostgreSQL9Dialect());
 	}
 
 	@After

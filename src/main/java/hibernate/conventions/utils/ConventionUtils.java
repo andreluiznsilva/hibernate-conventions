@@ -1,7 +1,5 @@
-package hibernate.conventions.util;
+package hibernate.conventions.utils;
 
-import hibernate.conventions.DDLConventions;
-import hibernate.conventions.MappingConventions;
 import hibernate.conventions.strategy.ConventionNamingStrategy;
 
 import java.lang.reflect.Field;
@@ -19,19 +17,6 @@ import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.hibernate.service.ServiceRegistry;
 
 public class ConventionUtils {
-
-	public static DDLConventions createDDLConventions(EntityManagerFactory entityManagerFactory) {
-		return createDDLConventions(entityManagerFactory, extractDialect(entityManagerFactory));
-	}
-
-	public static DDLConventions createDDLConventions(EntityManagerFactory entityManagerFactory, Dialect dialect) {
-		return new DDLConventions(extractConfiguration(entityManagerFactory),
-				extractServiceRegistry(entityManagerFactory), dialect);
-	}
-
-	public static MappingConventions createMappingConventions(EntityManagerFactory entityManagerFactory) {
-		return new MappingConventions(extractConfiguration(entityManagerFactory));
-	}
 
 	public static Configuration extractConfiguration(EntityManagerFactory entityManagerFactory) {
 		ServiceRegistry serviceRegistry = extractServiceRegistry(entityManagerFactory);

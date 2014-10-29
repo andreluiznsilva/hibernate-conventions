@@ -4,7 +4,7 @@ import static org.junit.Assert.assertTrue;
 import hibernate.conventions.dummy.TestConventionNamingStrategy;
 import hibernate.conventions.strategy.ConventionNamingStrategy;
 import hibernate.conventions.strategy.DefaultConventionNamingStrategy;
-import hibernate.conventions.util.ConventionUtils;
+import hibernate.conventions.utils.ConventionUtils;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -32,13 +32,13 @@ public class MappingConventionsIT {
 
 	@Test
 	public void testNormalize() {
-		MappingConventions conventions = new MappingConventions(configuration);
+		MappingConventions conventions = MappingConventions.create(configuration);
 		conventions.normalize();
 	}
 
 	@Test
 	public void testValidate() {
-		MappingConventions conventions = new MappingConventions(configuration);
+		MappingConventions conventions = MappingConventions.create(configuration);
 		conventions.validate();
 	}
 
@@ -47,7 +47,7 @@ public class MappingConventionsIT {
 
 		configuration.setProperty("hibernate.conventions.maxLength", "5");
 
-		MappingConventions conventions = new MappingConventions(configuration);
+		MappingConventions conventions = MappingConventions.create(configuration);
 		conventions.validate();
 
 	}
@@ -57,7 +57,7 @@ public class MappingConventionsIT {
 
 		configuration.setNamingStrategy(null);
 
-		MappingConventions conventions = new MappingConventions(configuration);
+		MappingConventions conventions = MappingConventions.create(configuration);
 		ConventionNamingStrategy strategy = conventions.getStrategy();
 
 		assertTrue(strategy instanceof DefaultConventionNamingStrategy);
@@ -69,14 +69,14 @@ public class MappingConventionsIT {
 
 		configuration.setNamingStrategy(new org.hibernate.cfg.DefaultNamingStrategy());
 
-		new MappingConventions(configuration);
+		MappingConventions.create(configuration);
 
 	}
 
 	@Test
 	public void testConfiguredConventionNamingStrategy() {
 
-		MappingConventions conventions = new MappingConventions(configuration);
+		MappingConventions conventions = MappingConventions.create(configuration);
 
 		ConventionNamingStrategy strategy = conventions.getStrategy();
 

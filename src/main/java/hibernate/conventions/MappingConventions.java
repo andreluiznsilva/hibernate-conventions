@@ -1,9 +1,12 @@
 package hibernate.conventions;
 
+import static hibernate.conventions.utils.ConventionUtils.extractConfiguration;
 import hibernate.conventions.strategy.ConventionNamingStrategy;
 import hibernate.conventions.strategy.DefaultConventionNamingStrategy;
 
 import java.util.Iterator;
+
+import javax.persistence.EntityManagerFactory;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.NamingStrategy;
@@ -18,10 +21,18 @@ import org.hibernate.mapping.UniqueKey;
 
 public class MappingConventions {
 
+	public static MappingConventions create(EntityManagerFactory entityManagerFactory) {
+		return create(extractConfiguration(entityManagerFactory));
+	}
+
+	public static MappingConventions create(Configuration configuration) {
+		return new MappingConventions(configuration);
+	}
+
 	private final Configuration configuration;
 	private final ConventionNamingStrategy strategy;
 
-	public MappingConventions(Configuration configuration) {
+	private MappingConventions(Configuration configuration) {
 
 		this.configuration = configuration;
 

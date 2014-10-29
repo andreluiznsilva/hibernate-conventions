@@ -1,7 +1,7 @@
 package hibernate.conventions.generator;
 
 import hibernate.conventions.strategy.ConventionNamingStrategy;
-import hibernate.conventions.util.ConventionUtils;
+import hibernate.conventions.utils.ConventionUtils;
 
 import java.util.Properties;
 
