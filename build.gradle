@@ -1,7 +1,8 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'maven'
 
-group = 'hibernate.conventions'
+group = 'hibernate-conventions'
 version = '0.0.1-SNAPSHOT'
 
 sourceCompatibility = 1.6
@@ -31,3 +32,10 @@ dependencies {
      from 'build/test-results'
      into 'shippable/testresults'
  }
+ 
+ install {
+    repositories.mavenInstaller {
+        pom.artifactId = 'hibernate-conventions' 
+        pom.packaging = 'jar'
+    }
+}
