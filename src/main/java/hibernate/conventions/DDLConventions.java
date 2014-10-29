@@ -36,7 +36,8 @@ public class DDLConventions {
 
 		String name = dialect.getClass().getSimpleName().toUpperCase();
 
-		if (name.startsWith("HSQL")) {
+
+        if (name.startsWith("HSQL")) {
 			results.add("TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK");
 		} else if (name.startsWith("POSTGRESQL")) {
 

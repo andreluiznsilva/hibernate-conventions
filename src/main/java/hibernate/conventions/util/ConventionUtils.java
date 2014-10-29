@@ -4,6 +4,8 @@ import hibernate.conventions.DDLConventions;
 import hibernate.conventions.MappingConventions;
 import hibernate.conventions.strategy.ConventionNamingStrategy;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -33,15 +35,15 @@ public class ConventionUtils {
 
 	public static Configuration extractConfiguration(EntityManagerFactory entityManagerFactory) {
 		ServiceRegistry serviceRegistry = extractServiceRegistry(entityManagerFactory);
-		return (Configuration) ReflectionUtils.getFieldValue("configuration", serviceRegistry);
+		return (Configuration) getFieldValue("configuration", serviceRegistry);
 	}
 
 	public static Dialect extractDialect(EntityManagerFactory entityManagerFactory) {
-		return (Dialect) ReflectionUtils.getFieldValue("dialect", extractSessionFactory(entityManagerFactory));
+		return (Dialect) getFieldValue("dialect", extractSessionFactory(entityManagerFactory));
 	}
 
 	public static ConventionNamingStrategy extractNameStrategy(ObjectNameNormalizer normalizer) {
-		return (ConventionNamingStrategy) ReflectionUtils.getPropertyValue("namingStrategy", normalizer);
+		return (ConventionNamingStrategy) invokeMethod("getNamingStrategy", normalizer);
 	}
 
 	public static ServiceRegistry extractServiceRegistry(EntityManagerFactory entityManagerFactory) {
@@ -69,11 +71,37 @@ public class ConventionUtils {
 	}
 
 	private static ServiceRegistry extractServiceRegistry(SessionFactory sessionFactory) {
-		return (ServiceRegistry) ReflectionUtils.getFieldValue("serviceRegistry", sessionFactory);
+		return (ServiceRegistry) getFieldValue("serviceRegistry", sessionFactory);
 	}
 
 	private static SessionFactory extractSessionFactory(EntityManagerFactory entityManagerFactory) {
 		return entityManagerFactory.unwrap(SessionFactory.class);
+	}
+
+	private static Object getFieldValue(String fieldName, Object target) {
+		try {
+			Field field = target.getClass().getDeclaredField(fieldName);
+			if (field != null) {
+				field.setAccessible(true);
+				return field.get(target);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return null;
+	}
+
+	private static Object invokeMethod(String methodName, Object target, Object... parans) {
+		try {
+			Method method = target.getClass().getDeclaredMethod(methodName);
+			if (method != null) {
+				method.setAccessible(true);
+				return method.invoke(target, parans);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return null;
 	}
 
 	private ConventionUtils() {

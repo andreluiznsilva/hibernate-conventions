@@ -24,7 +24,6 @@ dependencies {
     compile 'log4j:log4j:1.2.17'
 
     compile 'org.hibernate:hibernate-entitymanager:4.3.5.Final'    
-    compile 'net.vidageek:mirror:1.6.1'
     
 }
 
