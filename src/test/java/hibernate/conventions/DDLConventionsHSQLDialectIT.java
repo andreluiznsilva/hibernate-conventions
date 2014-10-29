@@ -32,8 +32,7 @@ public class DDLConventionsHSQLDialectIT {
 	@Test
 	public void testGenerateCleanScript() {
 		List<String> script = conventions.generateCleanScript();
-		assertSql(script,
-				"TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK");
+		assertSql(script, "truncate schema public restart identity and commit no check");
 	}
 
 	@Test

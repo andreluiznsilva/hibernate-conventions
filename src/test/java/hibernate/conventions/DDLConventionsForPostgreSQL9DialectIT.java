@@ -33,8 +33,7 @@ public class DDLConventionsForPostgreSQL9DialectIT {
 	@Test
 	public void testGenerateCleanScript() {
 		List<String> script = conventions.generateCleanScript();
-		assertSql(script,
-				"TRUNCATE DummyEntity CASCADE");
+		assertSql(script, "truncate DummyEntity cascade");
 	}
 
 	@Test

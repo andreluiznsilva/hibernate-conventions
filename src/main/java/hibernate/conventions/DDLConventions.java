@@ -48,24 +48,24 @@ public class DDLConventions {
 
 		List<String> results = new ArrayList<String>();
 
-		String name = dialect.getClass().getSimpleName().toUpperCase();
+		String name = dialect.getClass().getSimpleName().toLowerCase();
 
-		if (name.startsWith("HSQL")) {
-			results.add("TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK");
-		} else if (name.startsWith("POSTGRESQL")) {
+		if (name.startsWith("hsql")) {
+			results.add("truncate schema public restart identity and commit no check");
+		} else if (name.startsWith("postgresql")) {
 
 			Iterator<PersistentClass> iterator1 = configuration.getClassMappings();
 			while (iterator1.hasNext()) {
 				PersistentClass clazz = iterator1.next();
 				Table table = clazz.getTable();
-				results.add("TRUNCATE " + table.getName() + " CASCADE");
+				results.add("truncate " + table.getName() + " cascade");
 			}
 
 			Iterator<?> iterator2 = configuration.getCollectionMappings();
 			while (iterator2.hasNext()) {
 				Collection collection = (Collection) iterator2.next();
 				Table table = collection.getCollectionTable();
-				results.add("TRUNCATE " + table.getName() + " CASCADE");
+				results.add("truncate " + table.getName() + " cascade");
 			}
 
 		}
