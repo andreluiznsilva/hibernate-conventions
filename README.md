@@ -2,11 +2,31 @@
 
 [![Build Status](https://api.shippable.com/projects/540e74613479c5ea8f9e6238/badge?branchName=master)](https://app.shippable.com/projects/540e74613479c5ea8f9e6238/builds/latest)
 
+Plugin para Hibernate que permite validar e convencionar o mapeamento do hibernate de modo e gerar DDLs, SQLs e padrões de scripts de banco de forma mais simples e padronizada.
+
+A validação permite, por exemplo, determinar os tamanhos máximos e mínimos dos nomes das colunas, tabelas e outros objetos de banco de dados gerados pelo hibernate.
+
+A convenção permite, assim como o NamingStrategy (um extenção dele), definir convenções de nomes para indices, foreign keys, unique keys, sequences e outros objetos. Também é possível convencionar tipos de dados do banco para tipos Java, se a necessidade de mapear campo a campo.
+
+Para instalar, basta adicionar o jar no projeto. Atualmente existe duas configurações que podem ser feitas no persistence.xml, são elas:
+
+#### hibernate.conventions.maxLength (default = 255) 
+Permite definir o tamanho máximo de carateres para os nomes de tabelas, sequences, colunas, etc. Por exemplo, o Oracle permite somente 30 carateres. Assim bastaria configurar da seguinte forma:
+
+	<property name="hibernate.conventions.maxLength" value="30" />
+	
+#### hibernate.ejb.naming_strategy (default = hibernate.conventions.strategy.DefaultConventionNamingStrategy)
+Permite configurar o NammingStrategy usado no Hibernate. Se esta classe implementar ConventionNamingStrategy, ela será usada para gerar as conveções de nomes para os objetos do banco de dados. Exemplo:
+
+	<property name="hibernate.ejb.naming_strategy" value="hibernate.conventions.dummy.TestConventionNamingStrategy" />
+
+## Setup
+
 Tecnologies       | Version
 ------------------|--------------------
 Java              | 6
 Gradle            | 2.x
-HIbernate         | 4.X
+Hibernate         | 4.X
     
 ## Build
     
