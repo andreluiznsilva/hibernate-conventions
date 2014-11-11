@@ -1,5 +1,6 @@
 .settings/
 .gradle/
+.idea/
 target/
 target-eclipse/
 build/
