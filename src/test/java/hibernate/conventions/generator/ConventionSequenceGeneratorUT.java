@@ -49,7 +49,7 @@ public class ConventionSequenceGeneratorUT {
 
 		generator.configure(type, params, dialect);
 
-		assertEquals("seq_" + entityName, params.get(SEQUENCE));
+		assertEquals("seq" + entityName, params.get(SEQUENCE));
 
 	}
 
@@ -69,7 +69,7 @@ public class ConventionSequenceGeneratorUT {
 
 		generator.configure(type, params, dialect);
 
-		assertEquals("seq_" + tableName, params.get(SEQUENCE));
+		assertEquals("seq" + tableName, params.get(SEQUENCE));
 
 	}
 

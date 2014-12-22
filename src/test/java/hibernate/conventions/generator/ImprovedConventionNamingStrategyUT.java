@@ -4,12 +4,13 @@ import static org.junit.Assert.assertEquals;
 import hibernate.conventions.dummy.DummyEntity;
 import hibernate.conventions.strategy.ConventionNamingStrategy;
 import hibernate.conventions.strategy.DefaultConventionNamingStrategy;
+import hibernate.conventions.strategy.ImprovedConventionNamingStrategy;
 
 import org.junit.Test;
 
-public class DefaultConventionNamingStrategyUT {
+public class ImprovedConventionNamingStrategyUT {
 
-	private ConventionNamingStrategy strategy = new DefaultConventionNamingStrategy();
+	private ConventionNamingStrategy strategy = new ImprovedConventionNamingStrategy();
 
 	@Test
 	public void testClassToTableName() {
@@ -18,7 +19,7 @@ public class DefaultConventionNamingStrategyUT {
 
 		String result = strategy.classToTableName(className);
 
-		assertEquals("DummyEntity", result);
+		assertEquals("dummy_entity", result);
 
 	}
 
@@ -30,7 +31,7 @@ public class DefaultConventionNamingStrategyUT {
 
 		String result = strategy.primaryKeyName(entity, tableName);
 
-		assertEquals("pk" + tableName, result);
+		assertEquals("pk_dummy_entity", result);
 
 	}
 

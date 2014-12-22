@@ -1,36 +1,37 @@
 package hibernate.conventions.strategy;
 
+import hibernate.conventions.strategy.ConventionNamingStrategy;
 import hibernate.conventions.utils.ConventionUtils;
 
-import org.hibernate.cfg.DefaultNamingStrategy;
+import org.hibernate.cfg.ImprovedNamingStrategy;
 
-public class DefaultConventionNamingStrategy extends DefaultNamingStrategy implements ConventionNamingStrategy {
+public class ImprovedConventionNamingStrategy extends ImprovedNamingStrategy implements ConventionNamingStrategy {
 
 	@Override
 	public String foreignKeyColumnName(
 	        String propertyName, String propertyEntityName, String propertyTableName, String referencedColumnName) {
-		return propertyTableName + referencedColumnName;
+		return addUnderscores(propertyTableName + "_" + referencedColumnName);
 	}
 
 	@Override
 	public String foreignKeyName(String ownerEntity, String ownerEntityTable, String associatedEntity,
 	        String associatedEntityTable) {
-		return "fk" + ownerEntityTable + associatedEntityTable;
+		return addUnderscores("fk_" + ownerEntityTable + "_" + associatedEntityTable);
 	}
 
 	@Override
 	public String indexName(String entity, String tableName) {
-		return "idx" + tableName;
+		return addUnderscores("idx_" + tableName);
 	}
 
 	@Override
 	public String primaryKeyName(String entity, String tableName) {
-		return "pk" + tableName;
+		return addUnderscores("pk_" + tableName);
 	}
 
 	@Override
 	public String sequenceName(String entity, String tableName) {
-		return "seq" + (ConventionUtils.isEmpty(tableName) ? entity : tableName);
+		return addUnderscores("seq_" + (ConventionUtils.isEmpty(tableName) ? entity : tableName));
 	}
 
 	@Override
@@ -50,7 +51,7 @@ public class DefaultConventionNamingStrategy extends DefaultNamingStrategy imple
 
 	@Override
 	public String uniqueKeyName(String entity, String tableName) {
-		return "uk" + tableName;
+		return addUnderscores("uk_" + tableName);
 	}
 
 }

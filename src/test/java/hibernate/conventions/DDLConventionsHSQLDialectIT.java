@@ -40,7 +40,7 @@ public class DDLConventionsHSQLDialectIT {
 		List<String> script = conventions.generateCreateScript();
 		assertSql(script,
 				"create table DummyEntity (id bigint not null, name varchar(255), primary key (id))",
-				"create sequence seq_DummyEntity start with 1");
+				"create sequence seqDummyEntity start with 1");
 	}
 
 	@Test
@@ -48,7 +48,7 @@ public class DDLConventionsHSQLDialectIT {
 		List<String> script = conventions.generateDropScript();
 		assertSql(script,
 				"drop table DummyEntity if exists",
-				"drop sequence seq_DummyEntity");
+				"drop sequence seqDummyEntity");
 	}
 
 	@Test

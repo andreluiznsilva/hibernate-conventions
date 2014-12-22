@@ -47,7 +47,7 @@ public class ConventionSequenceGeneratorIT {
 	}
 
 	private Number sequenceNextVal() {
-		return (Number) entityManager.createNativeQuery("call NEXT VALUE FOR seq_DummyEntity").getSingleResult();
+		return (Number) entityManager.createNativeQuery("call NEXT VALUE FOR seqDummyEntity").getSingleResult();
 	}
 
 }

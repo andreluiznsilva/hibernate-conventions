@@ -41,7 +41,7 @@ public class DDLConventionsForPostgreSQL9DialectIT {
 		List<String> script = conventions.generateCreateScript();
 		assertSql(script,
 				"create table DummyEntity (id bigint not null, name varchar(255), primary key (id))",
-				"create sequence seq_DummyEntity");
+				"create sequence seqDummyEntity");
 	}
 
 	@Test
@@ -49,7 +49,7 @@ public class DDLConventionsForPostgreSQL9DialectIT {
 		List<String> script = conventions.generateDropScript();
 		assertSql(script,
 				"drop table DummyEntity cascade",
-				"drop sequence seq_DummyEntity");
+				"drop sequence seqDummyEntity");
 	}
 
 	@Test
