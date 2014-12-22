@@ -3,7 +3,6 @@ package hibernate.conventions.generator;
 import static org.junit.Assert.assertEquals;
 import hibernate.conventions.dummy.DummyEntity;
 import hibernate.conventions.strategy.ConventionNamingStrategy;
-import hibernate.conventions.strategy.DefaultConventionNamingStrategy;
 import hibernate.conventions.strategy.ImprovedConventionNamingStrategy;
 
 import org.junit.Test;

@@ -21,12 +21,12 @@ import org.hibernate.mapping.UniqueKey;
 
 public class MappingConventions {
 
-	public static MappingConventions create(EntityManagerFactory entityManagerFactory) {
-		return create(extractConfiguration(entityManagerFactory));
-	}
-
 	public static MappingConventions create(Configuration configuration) {
 		return new MappingConventions(configuration);
+	}
+
+	public static MappingConventions create(EntityManagerFactory entityManagerFactory) {
+		return create(extractConfiguration(entityManagerFactory));
 	}
 
 	private final Configuration configuration;
@@ -44,9 +44,18 @@ public class MappingConventions {
 			strategy = (ConventionNamingStrategy) namingStrategy;
 		} else {
 			throw new IllegalArgumentException(
-					"Configured namingStrategy is not a instance of ConventionNamingStrategy");
+			        "Configured namingStrategy is not a instance of ConventionNamingStrategy");
 		}
 
+	}
+
+	private int getProperty(String name, int defaultValue) {
+		return Integer.valueOf(getProperty(name, Integer.toString(defaultValue)));
+	}
+
+	private String getProperty(String name, String defaultValue) {
+		String value = (String) configuration.getProperties().get(name);
+		return value == null ? defaultValue : value;
 	}
 
 	public ConventionNamingStrategy getStrategy() {
@@ -71,6 +80,95 @@ public class MappingConventions {
 
 	}
 
+	private void normalize(Table table, String entityName) {
+		normalizeTable(table, entityName);
+		normalizeColumns(table, entityName);
+		normalizePrimaryKeys(table, entityName);
+		normalizeForeignKeys(table, entityName);
+		normalizeUniqueKeys(table, entityName);
+		normalizeIndexs(table, entityName);
+	}
+
+	private String normalizeCase(String name) {
+		String caze = getProperty("hibernate.conventions.case", null);
+		if ("upper".equals(caze)) {
+			name = name.toUpperCase();
+		} else if ("lower".equals(caze)) {
+			name = name.toLowerCase();
+		}
+		return name;
+	}
+
+	@SuppressWarnings("rawtypes")
+	private void normalizeColumns(Table table, String entityName) {
+
+		Iterator iterator = table.getColumnIterator();
+		while (iterator.hasNext()) {
+
+			Column column = (Column) iterator.next();
+
+			String name = normalizeCase(column.getName());
+			String sqlType = strategy.sqlType(table.getName(), column.getSqlType());
+			int sqlPrecision = strategy.sqlPrecision(table.getName(), column.getSqlType(), column.getPrecision());
+			int sqlScale = strategy.sqlScale(table.getName(), column.getSqlType(), column.getScale());
+
+			column.setName(name);
+			column.setSqlType(sqlType);
+			column.setPrecision(sqlPrecision);
+			column.setScale(sqlScale);
+
+		}
+
+	}
+
+	@SuppressWarnings("rawtypes")
+	private void normalizeForeignKeys(Table table, String entityName) {
+		Iterator iterator = table.getForeignKeyIterator();
+		while (iterator.hasNext()) {
+			ForeignKey fk = (ForeignKey) iterator.next();
+			String name = strategy.foreignKeyName(entityName, table.getName(),
+			        fk.getReferencedEntityName(), fk.getReferencedTable().getName());
+			name = normalizeCase(name);
+			fk.setName(name);
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	private void normalizeIndexs(Table table, String entityName) {
+		Iterator iterator = table.getIndexIterator();
+		while (iterator.hasNext()) {
+			Index idx = (Index) iterator.next();
+			String name = strategy.indexName(entityName, table.getName());
+			name = normalizeCase(name);
+			idx.setName(name);
+		}
+	}
+
+	private void normalizePrimaryKeys(Table table, String entityName) {
+		PrimaryKey pk = table.getPrimaryKey();
+		if (pk != null) {
+			String name = strategy.primaryKeyName(entityName, table.getName());
+			name = normalizeCase(name);
+			pk.setName(name);
+		}
+	}
+
+	private void normalizeTable(Table table, String entityName) {
+		String name = normalizeCase(table.getName());
+		table.setName(name);
+	}
+
+	@SuppressWarnings("rawtypes")
+	private void normalizeUniqueKeys(Table table, String entityName) {
+		Iterator iterator = table.getUniqueKeyIterator();
+		while (iterator.hasNext()) {
+			UniqueKey uk = (UniqueKey) iterator.next();
+			String name = strategy.uniqueKeyName(entityName, table.getName());
+			name = normalizeCase(name);
+			uk.setName(name);
+		}
+	}
+
 	public void validate() {
 
 		Iterator<PersistentClass> iterator = configuration.getClassMappings();
@@ -87,78 +185,6 @@ public class MappingConventions {
 			validate(table);
 		}
 
-	}
-
-	private int getProperty(String name, int defaultValue) {
-		String value = (String) configuration.getProperties().get(name);
-		return value == null ? defaultValue : Integer.valueOf(value);
-	}
-
-	private void normalize(Table table, String entityName) {
-		normalizeColumns(table, entityName);
-		normalizePrimaryKeys(table, entityName);
-		normalizeForeignKeys(table, entityName);
-		normalizeUniqueKeys(table, entityName);
-		normalizeIndexs(table, entityName);
-	}
-
-	@SuppressWarnings("rawtypes")
-	private void normalizeColumns(Table table, String entityName) {
-
-		Iterator iterator = table.getColumnIterator();
-		while (iterator.hasNext()) {
-
-			Column column = (Column) iterator.next();
-
-			String sqlType = strategy.sqlType(table.getName(), column.getSqlType());
-			int sqlPrecision = strategy.sqlPrecision(table.getName(), column.getSqlType(), column.getPrecision());
-			int sqlScale = strategy.sqlScale(table.getName(), column.getSqlType(), column.getScale());
-
-			column.setSqlType(sqlType);
-			column.setPrecision(sqlPrecision);
-			column.setScale(sqlScale);
-
-		}
-
-	}
-
-	@SuppressWarnings("rawtypes")
-	private void normalizeForeignKeys(Table table, String entityName) {
-		Iterator iterator = table.getForeignKeyIterator();
-		while (iterator.hasNext()) {
-			ForeignKey fk = (ForeignKey) iterator.next();
-			String name = strategy.foreignKeyName(entityName, table.getName(),
-					fk.getReferencedEntityName(), fk.getReferencedTable().getName());
-			fk.setName(name);
-		}
-	}
-
-	@SuppressWarnings("rawtypes")
-	private void normalizeIndexs(Table table, String entityName) {
-		Iterator iterator = table.getIndexIterator();
-		while (iterator.hasNext()) {
-			Index idx = (Index) iterator.next();
-			String name = strategy.indexName(entityName, table.getName());
-			idx.setName(name);
-		}
-	}
-
-	private void normalizePrimaryKeys(Table table, String entityName) {
-		PrimaryKey pk = table.getPrimaryKey();
-		if (pk != null) {
-			String name = strategy.primaryKeyName(entityName, table.getName());
-			pk.setName(name);
-		}
-	}
-
-	@SuppressWarnings("rawtypes")
-	private void normalizeUniqueKeys(Table table, String entityName) {
-		Iterator iterator = table.getUniqueKeyIterator();
-		while (iterator.hasNext()) {
-			UniqueKey uk = (UniqueKey) iterator.next();
-			String name = strategy.uniqueKeyName(entityName, table.getName());
-			uk.setName(name);
-		}
 	}
 
 	private void validate(Table table) {

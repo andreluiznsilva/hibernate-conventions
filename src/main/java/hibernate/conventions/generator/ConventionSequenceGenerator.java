@@ -18,7 +18,6 @@ public class ConventionSequenceGenerator extends SequenceGenerator {
 		String entityName = params.getProperty(ENTITY_NAME);
 		String table = params.getProperty(TABLE);
 		ObjectNameNormalizer normalizer = (ObjectNameNormalizer) params.get(IDENTIFIER_NORMALIZER);
-
 		ConventionNamingStrategy strategy = ConventionUtils.extractNameStrategy(normalizer);
 
 		String sequence = params.getProperty(SEQUENCE);
