@@ -17,3 +17,5 @@ git commit -a
 git push
 
 git checkout master
+
+git reset --hard
