@@ -18,7 +18,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.mapping.Collection;
 import org.hibernate.mapping.PersistentClass;
-import org.hibernate.mapping.Table;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
 import org.hibernate.tool.hbm2ddl.SchemaUpdateScript;
@@ -31,12 +30,12 @@ public class DDLConventions {
 
 	public static DDLConventions create(EntityManagerFactory entityManagerFactory, Dialect dialect) {
 		return new DDLConventions(
-				extractConfiguration(entityManagerFactory), extractServiceRegistry(entityManagerFactory), dialect);
+		        extractConfiguration(entityManagerFactory), extractServiceRegistry(entityManagerFactory), dialect);
 	}
 
 	private final Configuration configuration;
-	private final ServiceRegistry serviceRegistry;
 	private final Dialect dialect;
+	private final ServiceRegistry serviceRegistry;
 
 	private DDLConventions(Configuration configuration, ServiceRegistry serviceRegistry, Dialect dialect) {
 		this.configuration = configuration;
@@ -53,21 +52,13 @@ public class DDLConventions {
 		if (name.startsWith("hsql")) {
 			results.add("truncate schema public restart identity and commit no check");
 		} else if (name.startsWith("postgresql")) {
-
-			Iterator<PersistentClass> iterator1 = configuration.getClassMappings();
-			while (iterator1.hasNext()) {
-				PersistentClass clazz = iterator1.next();
-				Table table = clazz.getTable();
-				results.add("truncate " + table.getName() + " cascade");
+			for (String table : listTables()) {
+				results.add("truncate " + table + " cascade");
 			}
-
-			Iterator<?> iterator2 = configuration.getCollectionMappings();
-			while (iterator2.hasNext()) {
-				Collection collection = (Collection) iterator2.next();
-				Table table = collection.getCollectionTable();
-				results.add("truncate " + table.getName() + " cascade");
+		} else if (name.startsWith("oracle")) {
+			for (String table : listTables()) {
+				results.add("truncate table " + table);
 			}
-
 		}
 
 		return results;
@@ -98,6 +89,24 @@ public class DDLConventions {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private List<String> listTables() {
+
+		List<String> results = new ArrayList<String>();
+
+		Iterator<PersistentClass> iterator1 = configuration.getClassMappings();
+		while (iterator1.hasNext()) {
+			results.add(iterator1.next().getTable().getName());
+		}
+
+		Iterator<?> iterator2 = configuration.getCollectionMappings();
+		while (iterator2.hasNext()) {
+			results.add(((Collection) iterator2.next()).getTable().getName());
+		}
+
+		return results;
+
 	}
 
 }

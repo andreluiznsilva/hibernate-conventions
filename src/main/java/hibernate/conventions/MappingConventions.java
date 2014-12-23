@@ -3,6 +3,7 @@ package hibernate.conventions;
 import static hibernate.conventions.utils.ConventionUtils.extractConfiguration;
 import hibernate.conventions.strategy.ConventionNamingStrategy;
 import hibernate.conventions.strategy.DefaultConventionNamingStrategy;
+import hibernate.conventions.utils.ConventionUtils;
 
 import java.util.Iterator;
 
