@@ -1,5 +1,6 @@
 package hibernate.conventions.integrator;
 
+import hibernate.conventions.ConfigConventions;
 import hibernate.conventions.MappingConventions;
 
 import org.hibernate.cfg.Configuration;
@@ -12,16 +13,19 @@ public class ConventionsIntegrator implements Integrator {
 
 	@Override
 	public void disintegrate(
-			SessionFactoryImplementor sessionFactory,
-			SessionFactoryServiceRegistry serviceRegistry) {
+	        SessionFactoryImplementor sessionFactory,
+	        SessionFactoryServiceRegistry serviceRegistry) {
 
 	}
 
 	@Override
 	public void integrate(
-			Configuration configuration,
-			SessionFactoryImplementor sessionFactory,
-			SessionFactoryServiceRegistry serviceRegistry) {
+	        Configuration configuration,
+	        SessionFactoryImplementor sessionFactory,
+	        SessionFactoryServiceRegistry serviceRegistry) {
+
+		ConfigConventions configConventions = ConfigConventions.create(configuration);
+		configConventions.validate();
 
 		MappingConventions mappingConventions = MappingConventions.create(configuration);
 		mappingConventions.normalize();
@@ -31,9 +35,9 @@ public class ConventionsIntegrator implements Integrator {
 
 	@Override
 	public void integrate(
-			MetadataImplementor metadata,
-			SessionFactoryImplementor sessionFactory,
-			SessionFactoryServiceRegistry serviceRegistry) {
+	        MetadataImplementor metadata,
+	        SessionFactoryImplementor sessionFactory,
+	        SessionFactoryServiceRegistry serviceRegistry) {
 	}
 
 }
