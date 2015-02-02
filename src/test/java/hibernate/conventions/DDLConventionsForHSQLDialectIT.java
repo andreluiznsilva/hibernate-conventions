@@ -13,7 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DDLConventionsHSQLDialectIT {
+public class DDLConventionsForHSQLDialectIT {
 
 	private EntityManagerFactory entityManagerFactory;
 	private DDLConventions conventions;

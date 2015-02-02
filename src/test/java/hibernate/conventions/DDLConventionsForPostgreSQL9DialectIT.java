@@ -40,16 +40,16 @@ public class DDLConventionsForPostgreSQL9DialectIT {
 	public void testGenerateCreateScript() {
 		List<String> script = conventions.generateCreateScript();
 		assertSql(script,
-				"create table DummyEntity (id bigint not null, name varchar(255), primary key (id))",
-				"create sequence seqDummyEntity");
+		        "create table DummyEntity (id bigint not null, name varchar(255), primary key (id))",
+		        "create sequence seqDummyEntity");
 	}
 
 	@Test
 	public void testGenerateDropScript() {
 		List<String> script = conventions.generateDropScript();
 		assertSql(script,
-				"drop table DummyEntity cascade",
-				"drop sequence seqDummyEntity");
+		        "drop table DummyEntity cascade",
+		        "drop sequence seqDummyEntity");
 	}
 
 	@Test
