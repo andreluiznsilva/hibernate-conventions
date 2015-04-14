@@ -39,3 +39,5 @@ install {
 		pom.packaging = 'jar'
 	}
 }
+
+createReleaseTag.dependsOn install
