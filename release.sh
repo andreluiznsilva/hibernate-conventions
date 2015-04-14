@@ -2,7 +2,7 @@
 
 set -e
 
-gradle clean release build install
+# gradle clean release build install
 
 git checkout mvn-repo
 
