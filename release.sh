@@ -14,10 +14,8 @@ cp -vr ~/.m2/repository/hibernate-conventions/. ./hibernate-conventions/
 
 git add * -f
 
-git commit -a
+git commit -m "release"
 
 git push
 
 git checkout master
-
-git reset --hard
