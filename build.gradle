@@ -5,8 +5,8 @@ apply from: 'http://tellurianring.com/projects/gradle-plugins/gradle-release/app
 
 group = 'hibernate-conventions'
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.5
+targetCompatibility = 1.5
 
 repositories {   
   mavenLocal()
@@ -28,14 +28,14 @@ dependencies {
     
 }
 
- task copyTestReports(type: Copy) {
-     from 'build/test-results'
-     into 'shippable/testresults'
- }
+task copyTestReports(type: Copy) {
+	 from 'build/test-results'
+	 into 'shippable/testresults'
+}
  
- install {
-    repositories.mavenInstaller {
-        pom.artifactId = 'hibernate-conventions' 
-        pom.packaging = 'jar'
-    }
+install {
+	repositories.mavenInstaller {
+			pom.artifactId = 'hibernate-conventions' 
+			pom.packaging = 'jar'
+	}
 }
