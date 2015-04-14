@@ -14,18 +14,18 @@ repositories {
 }
 
 dependencies {
-    
-    testCompile 'junit:junit:4.11'
-    testCompile 'org.hamcrest:hamcrest-all:1.3'
-    testCompile 'org.mockito:mockito-all:1.9.5'
-    testCompile 'org.hsqldb:hsqldb:2.3.2'
-    
-    compile 'org.slf4j:slf4j-api:1.7.7'
-    compile 'org.slf4j:slf4j-log4j12:1.7.7'
-    compile 'log4j:log4j:1.2.17'
+	
+	testCompile 'junit:junit:4.11'
+	testCompile 'org.hamcrest:hamcrest-all:1.3'
+	testCompile 'org.mockito:mockito-all:1.9.5'
+	testCompile 'org.hsqldb:hsqldb:2.3.2'
+	
+	compile 'org.slf4j:slf4j-api:1.7.7'
+	compile 'org.slf4j:slf4j-log4j12:1.7.7'
+	compile 'log4j:log4j:1.2.17'
 
-    compile 'org.hibernate:hibernate-entitymanager:4.3.5.Final'    
-    
+	compile 'org.hibernate:hibernate-entitymanager:4.3.5.Final'	
+	
 }
 
 task copyTestReports(type: Copy) {
@@ -35,7 +35,7 @@ task copyTestReports(type: Copy) {
  
 install {
 	repositories.mavenInstaller {
-			pom.artifactId = 'hibernate-conventions' 
-			pom.packaging = 'jar'
+		pom.artifactId = 'hibernate-conventions' 
+		pom.packaging = 'jar'
 	}
 }
