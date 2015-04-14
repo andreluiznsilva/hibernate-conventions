@@ -1,7 +1,7 @@
 package hibernate.conventions.generator;
 
 import static org.junit.Assert.assertEquals;
-import hibernate.conventions.dummy.DummyEntity;
+import hibernate.conventions.dummy.DummySequenceEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -18,7 +18,7 @@ public class ConventionSequenceGeneratorIT {
 
 	@Before
 	public void setUp() throws Exception {
-		entityManagerFactory = Persistence.createEntityManagerFactory("test");
+		entityManagerFactory = Persistence.createEntityManagerFactory("sequence");
 		entityManager = entityManagerFactory.createEntityManager();
 	}
 
@@ -32,7 +32,7 @@ public class ConventionSequenceGeneratorIT {
 	public void testSequenceGenerator() {
 
 		Number before = sequenceNextVal();
-		DummyEntity dummy = new DummyEntity("test");
+		DummySequenceEntity dummy = new DummySequenceEntity("test");
 
 		entityManager.getTransaction().begin();
 		entityManager.persist(dummy);
@@ -47,7 +47,7 @@ public class ConventionSequenceGeneratorIT {
 	}
 
 	private Number sequenceNextVal() {
-		return (Number) entityManager.createNativeQuery("call NEXT VALUE FOR seqDummyEntity").getSingleResult();
+		return (Number) entityManager.createNativeQuery("call NEXT VALUE FOR seqDummySequenceEntity").getSingleResult();
 	}
 
 }

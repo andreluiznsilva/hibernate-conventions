@@ -7,7 +7,7 @@ public interface ConventionNamingStrategy extends NamingStrategy {
 	String primaryKeyName(String entity, String tableName);
 
 	String foreignKeyName(String ownerEntity, String ownerEntityTable,
-			String associatedEntity, String associatedEntityTable);
+	        String associatedEntity, String associatedEntityTable);
 
 	String uniqueKeyName(String entity, String tableName);
 

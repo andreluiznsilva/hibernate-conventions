@@ -21,7 +21,7 @@ public class DDLConventionsForPostgreSQL9DialectIT {
 
 	@Before
 	public void setUp() throws Exception {
-		entityManagerFactory = Persistence.createEntityManagerFactory("test");
+		entityManagerFactory = Persistence.createEntityManagerFactory("sequence");
 		conventions = DDLConventions.create(entityManagerFactory, new PostgreSQL9Dialect());
 	}
 
@@ -33,23 +33,23 @@ public class DDLConventionsForPostgreSQL9DialectIT {
 	@Test
 	public void testGenerateCleanScript() {
 		List<String> script = conventions.generateCleanScript();
-		assertSql(script, "truncate DummyEntity cascade");
+		assertSql(script, "truncate DummySequenceEntity cascade");
 	}
 
 	@Test
 	public void testGenerateCreateScript() {
 		List<String> script = conventions.generateCreateScript();
 		assertSql(script,
-		        "create table DummyEntity (id bigint not null, name varchar(255), primary key (id))",
-		        "create sequence seqDummyEntity");
+		        "create table DummySequenceEntity (id bigint not null, name varchar(255), primary key (id))",
+		        "create sequence seqDummySequenceEntity");
 	}
 
 	@Test
 	public void testGenerateDropScript() {
 		List<String> script = conventions.generateDropScript();
 		assertSql(script,
-		        "drop table DummyEntity cascade",
-		        "drop sequence seqDummyEntity");
+		        "drop table DummySequenceEntity cascade",
+		        "drop sequence seqDummySequenceEntity");
 	}
 
 	@Test

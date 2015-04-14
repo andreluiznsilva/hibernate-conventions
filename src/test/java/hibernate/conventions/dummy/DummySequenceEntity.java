@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class DummyEntity implements Serializable {
+public class DummySequenceEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
@@ -18,10 +18,10 @@ public class DummyEntity implements Serializable {
 	private Long id;
 	private String name;
 
-	public DummyEntity() {
+	public DummySequenceEntity() {
 	}
 
-	public DummyEntity(String name) {
+	public DummySequenceEntity(String name) {
 		this.name = name;
 	}
 

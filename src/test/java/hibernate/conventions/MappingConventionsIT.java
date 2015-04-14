@@ -1,14 +1,13 @@
 package hibernate.conventions;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import hibernate.conventions.dummy.TestConventionNamingStrategy;
 import hibernate.conventions.strategy.ConventionNamingStrategy;
 import hibernate.conventions.strategy.DefaultConventionNamingStrategy;
 import hibernate.conventions.utils.ConventionUtils;
+
+import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -25,7 +24,7 @@ public class MappingConventionsIT {
 
 	@Before
 	public void setUp() throws Exception {
-		entityManagerFactory = Persistence.createEntityManagerFactory("test");
+		entityManagerFactory = Persistence.createEntityManagerFactory("sequence");
 		configuration = ConventionUtils.extractConfiguration(entityManagerFactory);
 	}
 
@@ -73,62 +72,6 @@ public class MappingConventionsIT {
 	}
 
 	@Test
-	public void testNormalizeUpperCase() {
-
-		configuration.setProperty("hibernate.conventions.case", "upper");
-
-		MappingConventions conventions = MappingConventions.create(configuration);
-		DDLConventions ddl = DDLConventions.create(entityManagerFactory);
-
-		List<String> expecteds = new ArrayList<String>();
-
-		for (String string : ddl.generateCreateScript()) {
-			string = string.replace("id", "ID");
-			string = string.replace("name", "NAME");
-			string = string.replace("DummyEntity", "DUMMYENTITY");
-			string = string.replace("seqDUMMYENTITY", "seqDummyEntity");
-			expecteds.add(string);
-		}
-
-		conventions.normalize();
-
-		List<String> results = ddl.generateCreateScript();
-
-		System.out.println(expecteds);
-		System.out.println(results);
-
-		assertEquals(expecteds, results);
-
-	}
-	
-	@Test
-	public void testNormalizeLowerCase() {
-
-		configuration.setProperty("hibernate.conventions.case", "lower");
-
-		MappingConventions conventions = MappingConventions.create(configuration);
-		DDLConventions ddl = DDLConventions.create(entityManagerFactory);
-
-		List<String> expecteds = new ArrayList<String>();
-
-		for (String string : ddl.generateCreateScript()) {
-			string = string.replace("DummyEntity", "dummyentity");
-			string = string.replace("seqdummyentity", "seqDummyEntity");
-			expecteds.add(string);
-		}
-
-		conventions.normalize();
-
-		List<String> results = ddl.generateCreateScript();
-
-		System.out.println(expecteds);
-		System.out.println(results);
-
-		assertEquals(expecteds, results);
-
-	}
-
-	@Test
 	public void testEmptyNamingStrategy() {
 
 		configuration.setNamingStrategy(null);
@@ -159,5 +102,4 @@ public class MappingConventionsIT {
 		assertTrue(strategy instanceof TestConventionNamingStrategy);
 
 	}
-
 }

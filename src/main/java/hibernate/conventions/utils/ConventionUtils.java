@@ -47,6 +47,20 @@ public class ConventionUtils {
 		}
 	}
 
+	public static boolean getProperty(Configuration configuration, String propertyName, boolean defaultValue) {
+		String value = configuration.getProperty(propertyName);
+		return isNotEmpty(value) ? Boolean.valueOf(value) : defaultValue;
+	}
+
+	public static int getProperty(Configuration configuration, String name, int defaultValue) {
+		return Integer.valueOf(getProperty(configuration, name, Integer.toString(defaultValue)));
+	}
+
+	public static String getProperty(Configuration configuration, String name, String defaultValue) {
+		String value = (String) configuration.getProperties().get(name);
+		return value == null ? defaultValue : value;
+	}
+
 	public static boolean isEmpty(String value) {
 		return value == null || value.isEmpty();
 	}

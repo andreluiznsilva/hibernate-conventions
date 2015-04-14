@@ -21,7 +21,7 @@ public class DDLConventionsForOracle10DialectIT {
 
 	@Before
 	public void setUp() throws Exception {
-		entityManagerFactory = Persistence.createEntityManagerFactory("test");
+		entityManagerFactory = Persistence.createEntityManagerFactory("sequence");
 		conventions = DDLConventions.create(entityManagerFactory, new Oracle10gDialect());
 	}
 
@@ -33,23 +33,23 @@ public class DDLConventionsForOracle10DialectIT {
 	@Test
 	public void testGenerateCleanScript() {
 		List<String> script = conventions.generateCleanScript();
-		assertSql(script, "truncate table DummyEntity");
+		assertSql(script, "truncate table DummySequenceEntity");
 	}
 
 	@Test
 	public void testGenerateCreateScript() {
 		List<String> script = conventions.generateCreateScript();
 		assertSql(script,
-		        "create table DummyEntity (id bigint not null, name varchar(255), primary key (id))",
-		        "create sequence seqDummyEntity");
+		        "create table DummySequenceEntity (id bigint not null, name varchar(255), primary key (id))",
+		        "create sequence seqDummySequenceEntity");
 	}
 
 	@Test
 	public void testGenerateDropScript() {
 		List<String> script = conventions.generateDropScript();
 		assertSql(script,
-		        "drop table DummyEntity cascade constraints",
-		        "drop sequence seqDummyEntity");
+		        "drop table DummySequenceEntity cascade constraints",
+		        "drop sequence seqDummySequenceEntity");
 	}
 
 	@Test

@@ -17,7 +17,7 @@ public class ConfigConventionsIT {
 
 	@Before
 	public void setUp() throws Exception {
-		entityManagerFactory = Persistence.createEntityManagerFactory("test");
+		entityManagerFactory = Persistence.createEntityManagerFactory("sequence");
 		configuration = ConventionUtils.extractConfiguration(entityManagerFactory);
 		configuration.setProperty("hibernate.conventions.checkConfig", "true");
 	}

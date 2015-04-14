@@ -25,11 +25,11 @@ public class ConfigConventions {
 
 	public void validate() {
 
-		boolean checkConfiguration = getProperty("hibernate.conventions.checkConfig", true);
+		boolean checkConfiguration = ConventionUtils.getProperty(configuration, "hibernate.conventions.checkConfig", true);
 
 		if (checkConfiguration) {
 
-			boolean autoCommit = getProperty("hibernate.connection.autocommit", true);
+			boolean autoCommit = ConventionUtils.getProperty(configuration, "hibernate.connection.autocommit", true);
 
 			if (autoCommit) {
 				throw new IllegalArgumentException(
@@ -39,11 +39,6 @@ public class ConfigConventions {
 
 		}
 
-	}
-
-	private boolean getProperty(String propertyName, boolean defaultValue) {
-		String value = configuration.getProperty(propertyName);
-		return ConventionUtils.isNotEmpty(value) ? Boolean.valueOf(value) : defaultValue;
 	}
 
 }

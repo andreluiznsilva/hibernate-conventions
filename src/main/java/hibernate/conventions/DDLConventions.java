@@ -49,16 +49,22 @@ public class DDLConventions {
 
 		String name = dialect.getClass().getSimpleName().toLowerCase();
 
-		if (name.startsWith("hsql")) {
+		if (name.contains("hsql")) {
 			results.add("truncate schema public restart identity and commit no check");
-		} else if (name.startsWith("postgresql")) {
+		} else {
+
+			String prefix = name.contains("postgre") ? "truncate " : "truncate table ";
+			String suffix = name.contains("postgre") ? " cascade" : "";
+
 			for (String table : listTables()) {
-				results.add("truncate " + table + " cascade");
+				results.add(prefix + table + suffix);
 			}
-		} else if (name.startsWith("oracle")) {
-			for (String table : listTables()) {
-				results.add("truncate table " + table);
+
+			if (name.contains("mysql")) {
+				results.add(0, "set foreign_key_checks = 0");
+				results.add("set foreign_key_checks = 1");
 			}
+
 		}
 
 		return results;

@@ -20,7 +20,7 @@ public class DDLConventionsForHSQLDialectIT {
 
 	@Before
 	public void setUp() throws Exception {
-		entityManagerFactory = Persistence.createEntityManagerFactory("test");
+		entityManagerFactory = Persistence.createEntityManagerFactory("sequence");
 		conventions = DDLConventions.create(entityManagerFactory, new HSQLDialect());
 	}
 
@@ -39,16 +39,16 @@ public class DDLConventionsForHSQLDialectIT {
 	public void testGenerateCreateScript() {
 		List<String> script = conventions.generateCreateScript();
 		assertSql(script,
-				"create table DummyEntity (id bigint not null, name varchar(255), primary key (id))",
-				"create sequence seqDummyEntity start with 1");
+				"create table DummySequenceEntity (id bigint not null, name varchar(255), primary key (id))",
+				"create sequence seqDummySequenceEntity start with 1");
 	}
 
 	@Test
 	public void testGenerateDropScript() {
 		List<String> script = conventions.generateDropScript();
 		assertSql(script,
-				"drop table DummyEntity if exists",
-				"drop sequence seqDummyEntity");
+				"drop table DummySequenceEntity if exists",
+				"drop sequence seqDummySequenceEntity");
 	}
 
 	@Test
