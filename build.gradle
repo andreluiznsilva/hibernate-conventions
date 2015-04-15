@@ -1,16 +1,48 @@
-apply plugin: 'java'
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+    dependencies {
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6"
+    }
+}
+
 apply plugin: 'eclipse'
+apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 apply from: 'http://tellurianring.com/projects/gradle-plugins/gradle-release/apply.groovy'
 
 group = 'hibernate-conventions'
+eclipse.project.name = project.group + '.' + project.name;
 
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
 
-repositories {   
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task copyTestReports(type: Copy) {
+	 from 'build/test-results'
+	 into 'shippable/testresults'
+}
+
+artifacts {
+    archives sourcesJar, javadocJar
+}
+
+repositories {
   mavenLocal()
-  mavenCentral()
+  jcenter()
 }
 
 dependencies {
@@ -28,11 +60,6 @@ dependencies {
 	
 }
 
-task copyTestReports(type: Copy) {
-	 from 'build/test-results'
-	 into 'shippable/testresults'
-}
- 
 install {
 	repositories.mavenInstaller {
 		pom.artifactId = 'hibernate-conventions' 
