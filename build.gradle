@@ -50,6 +50,9 @@ allprojects{
     publishing {
       publications {
         mavenJava(MavenPublication) {
+          groupId 'hibernate-conventions'
+          artifactId 'hibernate-conventions'
+          version project.version
           if (plugins.hasPlugin('war')) {
               from components.web
           } else {
@@ -92,10 +95,6 @@ allprojects{
 
         compile 'org.hibernate:hibernate-entitymanager:4.3.5.Final'	
 
-    }
-    
-    task install(dependsOn: 'publishMavenJavaPublicationToMavenLocal') << {
-        logger.info "Installing $project.name"
     }
     
 }
