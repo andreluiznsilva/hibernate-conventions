@@ -17,7 +17,6 @@ allprojects{
     apply plugin: 'maven-publish'
     apply plugin: 'com.jfrog.bintray'
    
-    name = 'hibernate-conventions'
     group = 'hibernate-conventions'
     eclipse.project.name = project.group + '.' + project.name;
     
