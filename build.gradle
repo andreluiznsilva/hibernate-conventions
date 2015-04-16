@@ -50,7 +50,7 @@ allprojects{
     publishing {
       publications {
         mavenJava(MavenPublication) {
-          version $version
+          version '$version'
           if (plugins.hasPlugin('war')) {
               from components.web
           } else {
