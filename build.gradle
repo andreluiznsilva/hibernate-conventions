@@ -94,4 +94,8 @@ allprojects{
 
     }
     
+    task install(dependsOn: 'publishMavenJavaPublicationToMavenLocal') << {
+        logger.info "Installing $project.name"
+    }
+    
 }
