@@ -1,14 +1,15 @@
 language: java
 jdk:
   - openjdk7
-branches:
-  only:
-    - master
 notifications:
   email:
     recipients: andreluiznsilva@gmail.com
     on_success: change
     on_failure: always
+before_script:
+  - touch ~/.gradle/gradle.properties
+  - cat "bintray_user = andreluiznsilva" >> "~/.gradle/gradle.properties"
+  - cat "bintray_api_key = andreluiznsilva" >> "~/.gradle/gradle.properties"
 after_success:
   - gradle copyTestReports
 after_error:
