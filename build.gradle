@@ -1,3 +1,5 @@
+group = 'hibernate-conventions'
+
 buildscript {
     repositories {
         mavenLocal()
@@ -46,6 +48,7 @@ allprojects{
     publishing {
       publications {
         mavenJava(MavenPublication) {
+          artifactId = 'hibernate-conventions'
           if (plugins.hasPlugin('war')) {
               from components.web
           } else {
