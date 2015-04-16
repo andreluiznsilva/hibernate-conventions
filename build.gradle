@@ -68,16 +68,14 @@ allprojects{
     bintray {
         user = bintray_user         //this usually comes from gradle.properties file in ~/.gradle
         key = bintray_api_key       //this usually comes from gradle.properties file in ~/.gradle
-        configurations = ['published', 'archives']
-        filesSpec {
-          from 'files'
-          into 'standalone_files/level1'
-          rename '(.+)\\.(.+)', '$1-suffix.$2'
-        }
+        publications = ['mavenJava']        
         publish = true
         pkg {
             repo = 'maven'
             name = 'hibernate-conventions'
+            version {
+                name = '1.3-Final' 
+            }
         }
     }
 
