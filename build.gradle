@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.1'
         classpath 'net.researchgate:gradle-release:2.0.1'
     }
 }
@@ -69,7 +69,7 @@ allprojects{
     bintray {
         user = bintray_user         //this usually comes from gradle.properties file in ~/.gradle
         key = bintray_api_key       //this usually comes from gradle.properties file in ~/.gradle
-        publications = ['mavenJava']
+        publications = ['mavenStuff']
         publish = true
         pkg {
             repo = 'maven'
