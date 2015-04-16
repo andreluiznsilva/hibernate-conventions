@@ -2,7 +2,8 @@ language: java
 jdk:
   - openjdk7
 branches:
-  only: master
+  only:
+    - master
 notifications:
   email:
     recipients: andreluiznsilva@gmail.com
