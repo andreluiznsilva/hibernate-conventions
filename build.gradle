@@ -5,22 +5,25 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
+        classpath 'net.researchgate:gradle-release:2.0.1'
     }
 }
 
+apply plugin: 'net.researchgate.release'
+apply plugin: 'eclipse'
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+group = 'hibernate-conventions'
+
 allprojects{
 
-    apply from: 'http://tellurianring.com/projects/gradle-plugins/gradle-release/apply.groovy'
-    apply plugin: 'eclipse'
-    apply plugin: 'java'
-    apply plugin: 'maven'
-    apply plugin: 'maven-publish'
-    apply plugin: 'com.jfrog.bintray'
    
-    group = 'hibernate-conventions'
     eclipse.project.name = project.group + '.' + project.name;
     
-    afterReleaseBuild.dependsOn bintrayUpload
+    createReleaseTag.dependsOn bintrayUpload
 
     sourceCompatibility = 1.5
     targetCompatibility = 1.5
