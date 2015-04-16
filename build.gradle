@@ -21,6 +21,8 @@ group = 'hibernate-conventions'
 allprojects{
    
     eclipse.project.name = project.group + '.' + project.name;
+    
+    createReleaseTag.dependsOn bintrayUpload
 
     sourceCompatibility = 1.5
     targetCompatibility = 1.5
@@ -28,10 +30,6 @@ allprojects{
     repositories {
       mavenLocal()
       jcenter()
-    }
-    
-    task afterReleaseBuild() {
-       bintrayUpload
     }
         
     task sourcesJar(type: Jar, dependsOn: classes) {
@@ -52,9 +50,7 @@ allprojects{
     publishing {
       publications {
         mavenJava(MavenPublication) {
-          groupId 'hibernate-conventions'
-          artifactId 'hibernate-conventions'
-          version project.version
+          version $version
           if (plugins.hasPlugin('war')) {
               from components.web
           } else {
