@@ -22,8 +22,6 @@ allprojects{
    
     eclipse.project.name = project.group + '.' + project.name;
     
-    createReleaseTag.dependsOn bintrayUpload
-
     sourceCompatibility = 1.5
     targetCompatibility = 1.5
 
