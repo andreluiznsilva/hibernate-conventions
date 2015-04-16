@@ -19,7 +19,6 @@ apply plugin: 'com.jfrog.bintray'
 group = 'hibernate-conventions'
 
 allprojects{
-
    
     eclipse.project.name = project.group + '.' + project.name;
     
@@ -69,7 +68,7 @@ allprojects{
     bintray {
         user = bintray_user         //this usually comes from gradle.properties file in ~/.gradle
         key = bintray_api_key       //this usually comes from gradle.properties file in ~/.gradle
-        publications = ['mavenStuff']
+        publications = ['mavenJava']
         publish = true
         pkg {
             repo = 'maven'
