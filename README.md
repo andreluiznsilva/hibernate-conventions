@@ -1,6 +1,4 @@
-# Hibernate Conventions
-
-[![Build Status](https://api.shippable.com/projects/540e74613479c5ea8f9e6238/badge?branchName=master)](https://app.shippable.com/projects/540e74613479c5ea8f9e6238/builds/latest)
+# Hibernate Conventions   [![Build Status](https://api.shippable.com/projects/540e74613479c5ea8f9e6238/badge?branchName=master)](https://app.shippable.com/projects/540e74613479c5ea8f9e6238/builds/latest)   [ ![Download](https://api.bintray.com/packages/andreluiznsilva/maven/hibernate-conventions/images/download.svg) ](https://bintray.com/andreluiznsilva/maven/hibernate-conventions/_latestVersion)
 
 Plugin para Hibernate que permite validar e convencionar o mapeamento do hibernate de modo e gerar DDLs, SQLs e padrões de scripts de banco de forma mais simples e padronizada.
 
