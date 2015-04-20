@@ -2,6 +2,9 @@ package hibernate.conventions.utils;
 
 import hibernate.conventions.strategy.ConventionNamingStrategy;
 
+import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -17,6 +20,37 @@ import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.hibernate.service.ServiceRegistry;
 
 public class ConventionUtils {
+
+	public static void closeIfNotNull(Closeable closeable) {
+		if (closeable != null) {
+			try {
+				closeable.close();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
+	public static void createFile(String filename) {
+
+		File file = new File(filename);
+		File parent = file.getParentFile();
+
+		if (!parent.exists() && !parent.mkdirs()) {
+			throw new IllegalStateException("Couldn't create dir: " + parent);
+		}
+
+		if (file.exists()) {
+			file.delete();
+		}
+
+		try {
+			file.createNewFile();
+		} catch (IOException e) {
+			throw new RuntimeException("Couldn't create file: " + filename, e);
+		}
+
+	}
 
 	public static Configuration extractConfiguration(EntityManagerFactory entityManagerFactory) {
 		ServiceRegistry serviceRegistry = extractServiceRegistry(entityManagerFactory);
