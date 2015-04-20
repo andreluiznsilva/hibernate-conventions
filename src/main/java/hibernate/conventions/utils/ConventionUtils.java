@@ -4,6 +4,7 @@ import hibernate.conventions.strategy.ConventionNamingStrategy;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -31,7 +32,7 @@ public class ConventionUtils {
 		}
 	}
 
-	public static void createFile(String filename) {
+	public static FileOutputStream createFile(String filename) throws Exception {
 
 		File file = new File(filename);
 		File parent = file.getParentFile();
@@ -49,6 +50,8 @@ public class ConventionUtils {
 		} catch (IOException e) {
 			throw new RuntimeException("Couldn't create file: " + filename, e);
 		}
+
+		return new FileOutputStream(file);
 
 	}
 

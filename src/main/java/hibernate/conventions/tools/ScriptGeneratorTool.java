@@ -3,8 +3,11 @@ package hibernate.conventions.tools;
 import hibernate.conventions.DDLConventions;
 import hibernate.conventions.utils.ConventionUtils;
 
-import java.io.Closeable;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +20,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 
-public class ScriptGeneratorTool implements Closeable {
+public class ScriptGeneratorTool {
 
 	public static void main(String[] args) throws Exception {
 
@@ -35,21 +38,26 @@ public class ScriptGeneratorTool implements Closeable {
 			        options, "");
 		} else {
 
-			String dialect = cl.getOptionValue("d");
-			String output = cl.getOptionValue("o", "target/script/ddl.sql");
-			String persistence = cl.getOptionValue("p", "persistenceUnit");
-
 			String[] scripts = cl.getArgs();
 			if (scripts.length == 0) {
 				scripts = new String[] { "clean drop create" };
 			}
 
+			String output = cl.getOptionValue("o", "target/script/ddl.sql");
+			FileOutputStream out = ConventionUtils.createFile(output);
+
 			ScriptGeneratorTool tool = null;
+			String dialect = cl.getOptionValue("d");
+			String persistence = cl.getOptionValue("p", "persistenceUnit");
+
+			EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistence, createConfig(dialect));
+
 			try {
-				tool = new ScriptGeneratorTool(persistence, dialect, output);
-				tool.generate(cl.getArgs());
+				tool = new ScriptGeneratorTool(entityManagerFactory);
+				tool.generate(out, cl.getArgs());
 			} finally {
-				tool.close();
+				ConventionUtils.closeIfNotNull(out);
+				entityManagerFactory.close();
 			}
 
 		}
@@ -65,77 +73,51 @@ public class ScriptGeneratorTool implements Closeable {
 	private static final String COMMENT = "-- ";
 	private static final String END_LINE = "\n";
 
-	private final String output;
 	private final DDLConventions ddlConventions;
-	private final EntityManagerFactory entityManagerFactory;
 
-	public ScriptGeneratorTool(EntityManagerFactory entityManagerFactory, String output) {
-		this.entityManagerFactory = entityManagerFactory;
+	public ScriptGeneratorTool(EntityManagerFactory entityManagerFactory) {
 		this.ddlConventions = DDLConventions.create(entityManagerFactory);
-		this.output = output;
 	}
 
-	public ScriptGeneratorTool(String persistence, String dialect, String output) {
-		this(Persistence.createEntityManagerFactory(persistence, createConfig(dialect)), output);
-	}
+	public void generate(OutputStream output, String... scripts) {
 
-	public void close() {
-		if (entityManagerFactory != null) {
-			entityManagerFactory.close();
-		}
-	}
-
-	public void generate(String... scripts) {
-
-		ConventionUtils.createFile(output);
+		List<String> lines = new ArrayList<String>();
 
 		for (String script : scripts) {
-			this.generateScript(script);
+
+			lines.add(COMMENT + script);
+
+			if ("create".equals(script)) {
+				lines.addAll(ddlConventions.generateCreateScript());
+			} else if ("drop".equals(script)) {
+				lines.addAll(ddlConventions.generateDropScript());
+			} else if ("clean".equals(script)) {
+				lines.addAll(ddlConventions.generateCleanScript());
+			} else if ("update".equals(script)) {
+				lines.addAll(ddlConventions.generateUpdateScript());
+			} else {
+				throw new IllegalArgumentException("No script found for '" + script + "'");
+			}
+
+			lines.add(END_LINE);
+
 		}
+
+		writeOnOutput(output, lines);
 
 	}
 
-	private void generateScript(String script) {
-
-		List<String> scripts = Collections.emptyList();
-
-		if ("create".equals(script)) {
-			scripts = ddlConventions.generateCreateScript();
-		} else if ("drop".equals(script)) {
-			scripts = ddlConventions.generateDropScript();
-		} else if ("clean".equals(script)) {
-			scripts = ddlConventions.generateCleanScript();
-		} else if ("update".equals(script)) {
-			scripts = ddlConventions.generateUpdateScript();
-		} else {
-			throw new IllegalArgumentException("No script found for '" + script + "'");
-		}
-
-		if (ConventionUtils.isNotEmpty(output)) {
-			writeOnOutput(script, scripts);
-		}
-
-	}
-
-	private void writeOnOutput(String script, List<String> commands) {
-		FileWriter writer = null;
+	private void writeOnOutput(OutputStream output, List<String> lines) {
+		Writer writer = null;
 		try {
-			writer = new FileWriter(output, true);
-			writer.write(COMMENT + script + END_LINE);
-			for (String command : commands) {
+			writer = new OutputStreamWriter(output);
+			for (String command : lines) {
 				writer.write(command + END_LINE);
 			}
-			writer.write(END_LINE);
 		} catch (Exception e) {
 			throw new RuntimeException("Couldn't  write on output:" + output, e);
 		} finally {
-			if (writer != null) {
-				try {
-					writer.close();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-			}
+			ConventionUtils.closeIfNotNull(writer);
 		}
 	}
 

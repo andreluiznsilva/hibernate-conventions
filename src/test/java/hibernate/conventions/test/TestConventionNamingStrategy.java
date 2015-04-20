@@ -1,4 +1,4 @@
-package hibernate.conventions.dummy;
+package hibernate.conventions.test;
 
 import hibernate.conventions.strategy.DefaultConventionNamingStrategy;
 

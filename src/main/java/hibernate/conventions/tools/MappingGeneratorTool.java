@@ -3,7 +3,10 @@ package hibernate.conventions.tools;
 import hibernate.conventions.utils.ConventionUtils;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -32,8 +35,13 @@ public class MappingGeneratorTool {
 		} else {
 
 			String output = cl.getOptionValue("o", "target/classes/META-INF/mapping.xml");
+			FileOutputStream out = ConventionUtils.createFile(output);
 
-			new MappingGeneratorTool(output, cl.getArgs()).generate();
+			try {
+				new MappingGeneratorTool(cl.getArgs()).generate(out);
+			} finally {
+				ConventionUtils.closeIfNotNull(out);
+			}
 
 		}
 
@@ -47,12 +55,14 @@ public class MappingGeneratorTool {
 			return classes;
 		}
 
+		String prefix = packageName.trim().isEmpty() ? "" : packageName + '.';
+
 		for (File file : directory.listFiles()) {
 			if (file.isDirectory()) {
 				assert !file.getName().contains(".");
-				classes.addAll(findClasses(file, packageName + "." + file.getName()));
+				classes.addAll(findClasses(file, prefix + file.getName()));
 			} else if (file.getName().endsWith(".class")) {
-				String fullName = packageName + '.' + file.getName().substring(0, file.getName().length() - 6);
+				String fullName = prefix + file.getName().substring(0, file.getName().length() - 6);
 				classes.add(loadClass(fullName));
 			}
 		}
@@ -70,17 +80,17 @@ public class MappingGeneratorTool {
 	}
 
 	private final String[] packages;
-	private final String output;
 
-	public MappingGeneratorTool(String output, String... packages) {
-		this.output = output;
+	public MappingGeneratorTool(String... packages) {
+		if (packages.length == 0) {
+			packages = new String[] { "" };
+		}
 		this.packages = packages;
 	}
 
-	public void generate() {
-		ConventionUtils.createFile(output);
+	public void generate(OutputStream output) {
 		List<Class<?>> entities = scanEntities();
-		writeXml(entities);
+		writeXml(entities, output);
 	}
 
 	private List<Class<?>> listClasses(String packageName) {
@@ -106,7 +116,7 @@ public class MappingGeneratorTool {
 			}
 
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException("", e);
 		}
 
 		return clazzes;
@@ -133,13 +143,13 @@ public class MappingGeneratorTool {
 
 	}
 
-	private void writeXml(List<Class<?>> entities) {
+	private void writeXml(List<Class<?>> entities, OutputStream output) {
 
-		FileWriter writer = null;
+		Writer writer = null;
 
 		try {
 
-			writer = new FileWriter(output, false);
+			writer = new OutputStreamWriter(output);
 			writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 			writer.write("<entity-mappings ");
 			writer.write("xmlns=\"http://java.sun.com/xml/ns/persistence/orm\" ");

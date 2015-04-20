@@ -2,9 +2,9 @@ package hibernate.conventions;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import hibernate.conventions.dummy.TestConventionNamingStrategy;
 import hibernate.conventions.strategy.ConventionNamingStrategy;
 import hibernate.conventions.strategy.DefaultConventionNamingStrategy;
+import hibernate.conventions.test.TestConventionNamingStrategy;
 import hibernate.conventions.utils.ConventionUtils;
 
 import java.util.List;
