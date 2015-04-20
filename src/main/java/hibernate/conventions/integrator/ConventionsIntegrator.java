@@ -11,14 +11,12 @@ import org.hibernate.service.spi.SessionFactoryServiceRegistry;
 
 public class ConventionsIntegrator implements Integrator {
 
-	@Override
 	public void disintegrate(
 	        SessionFactoryImplementor sessionFactory,
 	        SessionFactoryServiceRegistry serviceRegistry) {
 
 	}
 
-	@Override
 	public void integrate(
 	        Configuration configuration,
 	        SessionFactoryImplementor sessionFactory,
@@ -33,7 +31,6 @@ public class ConventionsIntegrator implements Integrator {
 
 	}
 
-	@Override
 	public void integrate(
 	        MetadataImplementor metadata,
 	        SessionFactoryImplementor sessionFactory,
