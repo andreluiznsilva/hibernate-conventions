@@ -1,17 +1,13 @@
-group = 'hibernate-conventions'
-
 buildscript {
     repositories {
-        mavenLocal()
         jcenter()
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.1'
         classpath 'net.researchgate:gradle-release:2.0.1'
+        classpath 'net.saliman:gradle-cobertura-plugin:2.2.4'
     }
 }
-
-
 
 apply plugin: 'net.researchgate.release'
 apply plugin: 'eclipse'
@@ -19,7 +15,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
-apply plugin: 'jacoco'
+apply plugin: 'cobertura'
 
 allprojects{
    
@@ -27,8 +23,19 @@ allprojects{
     targetCompatibility = 1.5
 
     repositories {
-      mavenLocal()
       jcenter()
+    }
+    
+    dependencies {
+
+        testCompile 'junit:junit:4.11'
+        testCompile 'org.hsqldb:hsqldb:2.3.2'
+        
+        testCompile 'xerces:xercesImpl:2.7.1'
+
+        compile 'org.hibernate:hibernate-entitymanager:4.3.5.Final'
+        compile 'commons-cli:commons-cli:1.2'	
+        
     }
         
     task sourcesJar(type: Jar, dependsOn: classes) {
@@ -44,22 +51,16 @@ allprojects{
     task copyTestReports(type: Copy) {
          from 'build/test-results'
          into 'shippable/testresults'
+         include '**/*.xml'
+         includeEmptyDirs = false
     }
     
     task copyCoverageReports(type: Copy) {
-        from 'build/jacoco'
+        from 'build/reports/cobertura'
         into 'shippable/codecoverage'
+        include '**/*.xml'
+        includeEmptyDirs = false
     }
-    
-    jacocoTestReport {
-		reports {
-		   xml{
-			   enabled true
-			   destination "${buildDir}/jacoco/jacoco.xml"
-		   }
-		}
-    }
-    copyCoverageReports.dependsOn jacocoTestReport
     
     publishing {
       publications {
@@ -91,20 +92,11 @@ allprojects{
         }
     }
     
-    dependencies {
-
-        testCompile 'junit:junit:4.11'
-        testCompile 'org.hamcrest:hamcrest-all:1.3'
-        testCompile 'org.mockito:mockito-all:1.9.5'
-        testCompile 'org.hsqldb:hsqldb:2.3.2'
-
-        compile 'org.slf4j:slf4j-api:1.7.7'
-        compile 'org.slf4j:slf4j-log4j12:1.7.7'
-        compile 'log4j:log4j:1.2.17'
-
-        compile 'org.hibernate:hibernate-entitymanager:4.3.5.Final'
-        compile 'commons-cli:commons-cli:1.2'	
-        
+    cobertura {
+        coverageFormats = ['html', 'xml']
+        coverageIgnoreTrivial = true
+        coverageCheckTotalBranchRate = 65
+        coverageCheckTotalLineRate = 65
     }
     
 }

@@ -6,7 +6,9 @@ notifications:
     recipients: andreluiznsilva@gmail.com
     on_success: change
     on_failure: always
+script:
+  - gradle cobertura coberturaCheck
 after_success:
   - gradle copyTestReports copyCoverageReports
 after_error:
-  - gradle copyTestReports
+  - gradle copyTestReports copyCoverageReports
