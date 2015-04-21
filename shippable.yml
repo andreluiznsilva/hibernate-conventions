@@ -7,6 +7,6 @@ notifications:
     on_success: change
     on_failure: always
 after_success:
-  - gradle copyTestReports
+  - gradle copyTestReports copyCoverageReports
 after_error:
   - gradle copyTestReports
