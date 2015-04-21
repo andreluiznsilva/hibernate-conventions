@@ -1,7 +1,7 @@
 package hibernate.conventions;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static hibernate.conventions.test.TestUtils.assertSql;
+import static hibernate.conventions.test.TestUtils.execute;
 
 import java.util.List;
 
@@ -11,7 +11,6 @@ import javax.persistence.Persistence;
 import org.hibernate.dialect.MySQL5Dialect;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class DDLConventionsForMySQLDialectIT {
@@ -53,17 +52,10 @@ public class DDLConventionsForMySQLDialectIT {
 	}
 
 	@Test
-	@Ignore
 	public void testGenerateUpdateScript() {
+		execute("drop table if exists DummyIncrementEntity", entityManagerFactory);
 		List<String> script = conventions.generateUpdateScript();
-		assertTrue(script.isEmpty());
-	}
-
-	private void assertSql(List<String> script, String... sqls) {
-		assertEquals(sqls.length, script.size());
-		for (int i = 0; i < sqls.length; i++) {
-			assertEquals(sqls[i], script.get(i));
-		}
+		assertSql(script, "create table DummyIncrementEntity (id bigint not null auto_increment, name varchar(255), primary key (id))");
 	}
 
 }

@@ -1,7 +1,7 @@
 package hibernate.conventions;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static hibernate.conventions.test.TestUtils.assertSql;
+import static hibernate.conventions.test.TestUtils.execute;
 
 import java.util.List;
 
@@ -11,18 +11,24 @@ import javax.persistence.Persistence;
 import org.hibernate.dialect.Oracle10gDialect;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class DDLConventionsForOracle10DialectIT {
 
-	private EntityManagerFactory entityManagerFactory;
 	private DDLConventions conventions;
+	private EntityManagerFactory entityManagerFactory;
 
 	@Before
 	public void setUp() throws Exception {
 		entityManagerFactory = Persistence.createEntityManagerFactory("sequence");
-		conventions = DDLConventions.create(entityManagerFactory, new Oracle10gDialect());
+		conventions = DDLConventions.create(entityManagerFactory, new Oracle10gDialect() {
+
+			@Override
+			public String getQuerySequencesString() {
+				return null;
+			}
+
+		});
 	}
 
 	@After
@@ -53,18 +59,10 @@ public class DDLConventionsForOracle10DialectIT {
 	}
 
 	@Test
-	@Ignore
-	// TODO: Verificar exceção
 	public void testGenerateUpdateScript() {
+		execute("drop sequence seqDummySequenceEntity", entityManagerFactory);
 		List<String> script = conventions.generateUpdateScript();
-		assertTrue(script.isEmpty());
-	}
-
-	private void assertSql(List<String> script, String... sqls) {
-		assertEquals(sqls.length, script.size());
-		for (int i = 0; i < sqls.length; i++) {
-			assertEquals(sqls[i], script.get(i));
-		}
+		assertSql(script, "create sequence seqDummySequenceEntity");
 	}
 
 }

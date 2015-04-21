@@ -1,6 +1,7 @@
 package hibernate.conventions;
 
-import static org.junit.Assert.assertEquals;
+import static hibernate.conventions.test.TestUtils.*;
+
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -39,29 +40,23 @@ public class DDLConventionsForHSQLDialectIT {
 	public void testGenerateCreateScript() {
 		List<String> script = conventions.generateCreateScript();
 		assertSql(script,
-				"create table DummySequenceEntity (id bigint not null, name varchar(255), primary key (id))",
-				"create sequence seqDummySequenceEntity start with 1");
+		        "create table DummySequenceEntity (id bigint not null, name varchar(255), primary key (id))",
+		        "create sequence seqDummySequenceEntity start with 1");
 	}
 
 	@Test
 	public void testGenerateDropScript() {
 		List<String> script = conventions.generateDropScript();
 		assertSql(script,
-				"drop table DummySequenceEntity if exists",
-				"drop sequence seqDummySequenceEntity");
+		        "drop table DummySequenceEntity if exists",
+		        "drop sequence seqDummySequenceEntity");
 	}
 
 	@Test
 	public void testGenerateUpdateScript() {
+		execute("drop sequence seqDummySequenceEntity", entityManagerFactory);
 		List<String> script = conventions.generateUpdateScript();
-		assertTrue(script.isEmpty());
-	}
-
-	private void assertSql(List<String> script, String... sqls) {
-		assertEquals(sqls.length, script.size());
-		for (int i = 0; i < sqls.length; i++) {
-			assertEquals(sqls[i], script.get(i));
-		}
+		assertSql(script, "create sequence seqDummySequenceEntity start with 1");
 	}
 
 }
