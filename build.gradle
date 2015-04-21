@@ -11,17 +11,18 @@ buildscript {
     }
 }
 
+
+
 apply plugin: 'net.researchgate.release'
 apply plugin: 'eclipse'
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'jacoco'
 
 allprojects{
    
-    eclipse.project.name = project.group + '.' + project.name;
-    
     sourceCompatibility = 1.5
     targetCompatibility = 1.5
 
@@ -39,12 +40,27 @@ allprojects{
         classifier = 'javadoc'
         from javadoc.destinationDir
     }
-
+    
     task copyTestReports(type: Copy) {
          from 'build/test-results'
          into 'shippable/testresults'
     }
-
+    
+    task copyCoverageReports(type: Copy) {
+        from 'build/jacoco'
+        into 'shippable/codecoverage'
+    }
+    
+    jacocoTestReport {
+		reports {
+		   xml{
+			   enabled true
+			   destination "${buildDir}/jacoco/jacoco.xml"
+		   }
+		}
+    }
+    copyCoverageReports.dependsOn jacocoTestReport
+    
     publishing {
       publications {
         mavenJava(MavenPublication) {
@@ -65,8 +81,8 @@ allprojects{
     }
 
     bintray {
-        user = bintray_user         //this usually comes from gradle.properties file in ~/.gradle
-        key = bintray_api_key       //this usually comes from gradle.properties file in ~/.gradle
+        user = bintray_user         // this usually comes from gradle.properties file in ~/.gradle
+        key = bintray_api_key       // this usually comes from gradle.properties file in ~/.gradle
         publications = ['mavenJava']        
         publish = true
         pkg {
@@ -74,7 +90,7 @@ allprojects{
             name = 'hibernate-conventions'
         }
     }
-
+    
     dependencies {
 
         testCompile 'junit:junit:4.11'
