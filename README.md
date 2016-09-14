@@ -1,4 +1,4 @@
-# Hibernate Conventions   [![Build Status](https://api.shippable.com/projects/540e74613479c5ea8f9e6238/badge?branchName=master)](https://app.shippable.com/projects/540e74613479c5ea8f9e6238/builds/latest)   [ ![Download](https://api.bintray.com/packages/andreluiznsilva/maven/hibernate-conventions/images/download.svg) ](https://bintray.com/andreluiznsilva/maven/hibernate-conventions/_latestVersion)
+# Hibernate Conventions   [![Run Status](https://api.shippable.com/projects/540e74613479c5ea8f9e6238/badge?branch=master)](https://app.shippable.com/projects/540e74613479c5ea8f9e6238) [![Coverage Badge](https://api.shippable.com/projects/540e74613479c5ea8f9e6238/coverageBadge?branch=master)](https://app.shippable.com/projects/540e74613479c5ea8f9e6238)
 
 A plugin for Hibernate thats allow validate, standardize e generate DDLs, SQLs and scripts in a simple way.
 
